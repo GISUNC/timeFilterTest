@@ -95,6 +95,31 @@ if(timeF.pieArray.length > 0){
     timeF.pieArray.forEach(e=>timeF.makePies(e.divArray,e.iRad))}// timeF.start('daMap',tileArray,'circle',)}
 });
 
+window.addEventListener("orientationchange", function() {
+timeF.calcDivDimensions()
+  var xUpdate = (window.innerWidth - xOrig)/2;
+  var yUpdate = (window.innerHeight - yOrig)/2;
+// //   console.log(window.innerWidth - xOrig);
+  timeF.updateMasks(xUpdate,yUpdate)
+  yOrig = window.innerHeight
+  xOrig = window.innerWidth
+  var vBoriginalX = document.getElementById(timeF.svgParentName).viewBox.baseVal.x
+  var vBoriginalY = document.getElementById(timeF.svgParentName).viewBox.baseVal.y
+  document.getElementById(timeF.svgParentName).setAttributeNS(null,'viewBox',vBoriginalX + " " + vBoriginalY + " "+window.innerWidth+" "+window.innerHeight)
+  
+  document.querySelectorAll(".upperSVG").forEach(e=>e.setAttributeNS(null,'viewBox',
+        e.viewBox.baseVal.x
+        +" "
+        +e.viewBox.baseVal.y
+        +" "+window.innerWidth+" "+window.innerHeight))
+// timeF.startLeafDiv(); 
+// timeF.joinAllLeafDiv()
+// timeF.makeSVG()
+if(timeF.pieArray.length > 0){
+    timeF.pieArray.forEach(e=>timeF.makePies(e.divArray,e.iRad))}// timeF.start('daMap',tileArray,'circle',)}
+});
+
+
 // function listAllEventListeners() {
 //   const allElements = Array.prototype.slice.call(document.querySelectorAll('*'));
 //   allElements.push(document);
