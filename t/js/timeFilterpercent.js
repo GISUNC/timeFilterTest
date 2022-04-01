@@ -277,6 +277,12 @@ var timeF = { //time filters to manage tiles of different years
                     var befY= parseFloat(e.getAttribute('cy'))
                     e.setAttributeNS(null,'cx',(befX+xChange))
                     e.setAttributeNS(null,'cy',(befY+yChange))
+                    if (e.getAttribute('xprop')){
+                        e.setAttributeNS(null,'xprop',(befX+xChange)/(timeF.divDimension.width))
+                    }
+                    if (e.getAttribute('yprop')){
+                        e.setAttributeNS(null,'yprop',(befY+yChange)/(timeF.divDimension.height))
+                    }
                     // update the svgs
                     // console.log("x:"+ xChange + " y:" + yChange)
                     // var daSVGupdate = document.getElementById("svg_"+(e.id.split('_')[1]))
@@ -290,6 +296,7 @@ var timeF = { //time filters to manage tiles of different years
                     
                     // document.getElementById("daRadio_"+(e.id.split('_')[1])).setAttributeNS(null,'cy',(befY+yChange))
                  }
+
                  function xyTextUpdater(e) {
                     var befX = parseFloat(e.getAttribute('x'))
                     var befY= parseFloat(e.getAttribute('y'))
@@ -314,7 +321,6 @@ var timeF = { //time filters to manage tiles of different years
                 document.querySelectorAll(".radio-stroke").forEach(e=>xyUpdater(e))
                 document.querySelectorAll(".radio-touch-event").forEach(e=>xyUpdater(e))
                 document.querySelectorAll(".textC").forEach(e=>xyTextUpdater(e))
-                // document.querySelectorAll(".daCenterSVG").forEach(e=>xyTranslator(e))
                 document.querySelectorAll(".daArrowCircle").forEach(e=>xyUpdater(e))
 
                 // I am seem like i am missing to update the radio button
@@ -328,6 +334,7 @@ var timeF = { //time filters to manage tiles of different years
 
                 // document.querySelectorAll(".daArrowCircle").forEach(e=>xyUpdater(e))
             },
+    // THIS method definitivamente necesita ser mejorado        
     objTest:undefined,        
     updatePieArray: function(obj){
         this.objTest = obj;
@@ -855,6 +862,8 @@ var timeF = { //time filters to manage tiles of different years
                                         daSVGbutton.parentElement.parentElement.setAttributeNS(null, "transform", 'translate(' +  -1*bboxX + ' ' +  -1*bboxY + ')')                                      
                                         xdis = daSVGbutton.getBoundingClientRect().x - document.getElementById(timeF.divContainer).getBoundingClientRect().x + daSVGbutton.getBoundingClientRect().width/2
                                         ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
+                                        // console.log('daSVG.x = ' + daSVGbutton.getBoundingClientRect().x + ' getBoundingClientRect().x = ' + document.getElementById(timeF.divContainer).getBoundingClientRect().x + " daSVGbutton.width = " + daSVGbutton.getBoundingClientRect().width)
+                                        // console.log(newViewBox)
                                         var daC = daSVG.getElementsByClassName("daC")
                                         if (timeF.svgType == "circle"){
                                         for (i=0; i<daC.length;i++){
