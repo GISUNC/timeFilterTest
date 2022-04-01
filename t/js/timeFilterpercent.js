@@ -30,7 +30,7 @@ var timeF = { //time filters to manage tiles of different years
     static: false,
     text:true,
     namesInDiv : false,
-    divDimension: { width:"", height:"",xCenter:"",yCenter:"",r:"", fontSize:12, xProp:.5, yProp:.5},
+    divDimension: { width:"", height:"",xCenter:"",yCenter:"",r:"", fontSize:20, xProp:.5, yProp:.5},
     toRadians: function(angle) {return angle * (Math.PI / 180);},
     toDegrees: function(angle) {return angle * (180 / Math.PI);},
     assingImgToDivs: function(imgSrcArray){
@@ -392,10 +392,11 @@ var timeF = { //time filters to manage tiles of different years
           var daMx2 = (xCenter + Math.sin(iRad+sAngle)*r)
           var daMy2 = (yCenter - Math.cos(iRad+sAngle)*r)
           //Need to make a better calculation of the size of the arc size. 
-          var daMxText = (xCenter + Math.sin(iRad+(sAngle*.45))*(r+timeF.divDimension.fontSize/2))
-          var daMyText = (yCenter - Math.cos(iRad+(sAngle*.45))*(r+timeF.divDimension.fontSize/2))
-          var daMx2Text = (xCenter + Math.sin(iRad+(sAngle*.55))*(r+timeF.divDimension.fontSize/2))
-          var daMy2Text = (yCenter - Math.cos(iRad+(sAngle*.55))*(r+timeF.divDimension.fontSize/2))
+          var pieTextSize = timeF.divDimension.fontSize
+          var daMxText = (xCenter + Math.sin(iRad+(sAngle*.45))*(r+pieTextSize))
+          var daMyText = (yCenter - Math.cos(iRad+(sAngle*.45))*(r+pieTextSize))
+          var daMx2Text = (xCenter + Math.sin(iRad+(sAngle*.55))*(r+pieTextSize))
+          var daMy2Text = (yCenter - Math.cos(iRad+(sAngle*.55))*(r+pieTextSize))
 
           iRad = iRad+sAngle
   
@@ -403,7 +404,7 @@ var timeF = { //time filters to manage tiles of different years
                           "A "+r+" "+r+", 0, 0, 1, "+daMx2+" "+daMy2+
                           "L "+xCenter+" "+yCenter+" Z"
           var daTextSection = "M "+daMxText+" "+daMyText+
-                            "A "+(r+timeF.divDimension.fontSize/2)+" "+(r+timeF.divDimension.fontSize/2)+", 0, 0, 1, "+daMx2Text+" "+daMy2Text+
+                            "A "+(r+pieTextSize)+" "+(r+pieTextSize)+", 0, 0, 1, "+daMx2Text+" "+daMy2Text+
                             "L "+xCenter+" "+yCenter+" Z"
         // var daText =  '<text x=\"' + daMxText + '\" y=\"' + daMyText + '\" style=\"fill:#fff; stroke:rgb(136, 57, 43); stroke-width:2; alignment-baseline="middle" text-anchor="middle"; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ divArray[i] + '</text>' 
         // this previous version the text is like a ferryswheel. 
@@ -421,7 +422,7 @@ var timeF = { //time filters to manage tiles of different years
             daPath.setAttribute('d',daTextSection)
    
         }
-          var daText =  '<text style=\"alignment-baseline:middle;  ' + timeF.divDimension.fontSize +' ;\"><textPath href=\"#pathText_' + divArray[i] + '\">'+
+          var daText =  '<text style=\"alignment-baseline:middle;  font-size:' + pieTextSize +'px; \"><textPath href=\"#pathText_' + divArray[i] + '\">'+
                             divArray[i] + '</textPath></text>'
           
           daMask.innerHTML = '<path id=\"path_'+divArray[i]+ '\" class=\"daC pies ' + divArray[0] + '\" cx=\"' + xCenter + '\" cy=\"' 
