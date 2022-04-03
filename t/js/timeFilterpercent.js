@@ -1,7 +1,6 @@
 // to do 
 // change the method for creating the pieArrays
-// verify how the center is calculated since it never behaves properly after the window has been resized
-
+// remove text-above-circle when creating pie. 
 var timeF = { //time filters to manage tiles of different years
     start: function(containerDIV,tileArray,svgType, options) {
         this.divContainer = containerDIV;
@@ -29,6 +28,7 @@ var timeF = { //time filters to manage tiles of different years
     leaflet: true, // true to work with leaflet tiles instead of static
     static: false,
     text:true,
+    textMask:false,
     namesInDiv : false,
     divDimension: { width:"", height:"",xCenter:"",yCenter:"",r:"", fontSize:20, xProp:.5, yProp:.5},
     toRadians: function(angle) {return angle * (Math.PI / 180);},
@@ -177,6 +177,7 @@ var timeF = { //time filters to manage tiles of different years
                         if (this.svgButton == "all"|| (timeF.svgButton == '' && (this.svgType == "circle" || this.svgType == "circle-pie"))) {var daArrowGroup =  daArrowN + daArrowS + daArrowE + daArrowW}
                         if (this.svgButton == "NS" || (timeF.svgButton == '' && this.svgType == "horizontal")) {var daArrowGroup =  daArrowN + daArrowS}
                         if (this.svgButton == "EW" || (timeF.svgButton == '' && this.svgType == "vertical")) {var daArrowGroup =  daArrowE + daArrowW}
+                        
 
                         var svgButtons = '<g id=\"gUp' + daID + '\"class=\"upB\"><g  class=\"' + daID + ' daCenterSVG\"' +
                         'stroke=\"none\" stroke-width=\"4\" style=\"pointer-events: fill; position: absolute; cursor: move;\" onmousedown=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" onmousemove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" onmouseup=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchstart=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" ontouchmove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" ontouchend=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchcancel=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\">'+
@@ -194,11 +195,18 @@ var timeF = { //time filters to manage tiles of different years
                                         
                         // start If statement to make circle ring and circle mask 
                         if (this.svgType == "circle" || this.svgType == "circle-pie"){ 
+                        var svgTextMask = '<text></text>'
                         var svgText = '<text></text>'
                         if (this.text == true){ 
                         var xText = (this.divDimension.width * xProp)// - this.divDimension.fontSize * 5;
                         var yText = (this.divDimension.height * yProp) - this.divDimension.fontSize/2 - this.divDimension.r;
-                        svgText = '<text id=\"MaskText_' + daID + '\"' + ' class=\"textC\" x=\"' + xText + '\" y=\"' + yText + '\" style=\"fill:#fff; stroke:rgb(136, 57, 43); stroke-width:2; alignment-baseline: middle; text-anchor: middle; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daID + '</text>' 
+                        // if (this.textMask == true)  {
+                        svgTextMask = '<text id=\"MaskText_' + daID + '\"' + ' class=\"textC\" x=\"' + xText + '\" y=\"' + yText + '\" style=\"alignment-baseline: middle; text-anchor: middle; rgb(255, 255, 255); font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daID + '</text>' 
+                        // }
+                        if (this.textMask == false)  {
+                            svgText = '<text id=\"circleText_' + daID + '\"' + ' class=\"text-above-circle\" radio=\"' + timeF.divDimension.r + '\" x=\"' + xText  + '\" y=\"' + yText + '\" style=\"z-index: 99999; alignment-baseline: middle; text-anchor: middle; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daID + '</text>' 
+
+                            }
                         }
 
                         var svgCircleMaskAndRing = '<clipPath id=\"mask_' + daID + '\"' + 
@@ -206,12 +214,12 @@ var timeF = { //time filters to manage tiles of different years
                             '\" cx= \"' + (timeF.divDimension.width * xProp) +
                             '\" cy= \"' + (timeF.divDimension.height * yProp) +
                             '\" r=\"' + timeF.divDimension.r + '\"></circle>' + 
-                            svgText +
-                            '</clipPath>' +
+                            svgTextMask +
+                            '</clipPath>'  +
                             '<circle id=\"daRadioStroke_' + daID + '\" class=\"' + daID + ' daAnim daRadio daR radio-stroke\" cx=\"' + (timeF.divDimension.width * xProp)+ '\" cy=\"' + (timeF.divDimension.height * yProp) + '\" r=\"' + timeF.divDimension.r + '\" ' 
                             +
                             'style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0.5; cursor: pointer; stroke-width: 1%;'
-                            + '\"></circle>' 
+                            + '\"></circle>' + svgText;
                         svgElem.innerHTML = svgCircleMaskAndRing 
                         } // End of IF creating circle ring and mask
                         // Apply selection of horizontal or vertical SVG 
@@ -322,7 +330,8 @@ var timeF = { //time filters to manage tiles of different years
                 document.querySelectorAll(".radio-touch-event").forEach(e=>xyUpdater(e))
                 document.querySelectorAll(".textC").forEach(e=>xyTextUpdater(e))
                 document.querySelectorAll(".daArrowCircle").forEach(e=>xyUpdater(e))
-
+                document.querySelectorAll(".text-above-circle").forEach(e=>xyTextUpdater(e))
+                
                 // I am seem like i am missing to update the radio button
 
                 
@@ -393,10 +402,11 @@ var timeF = { //time filters to manage tiles of different years
           var daMy2 = (yCenter - Math.cos(iRad+sAngle)*r)
           //Need to make a better calculation of the size of the arc size. 
           var pieTextSize = timeF.divDimension.fontSize
-          var daMxText = (xCenter + Math.sin(iRad+(sAngle*.45))*(r+pieTextSize))
-          var daMyText = (yCenter - Math.cos(iRad+(sAngle*.45))*(r+pieTextSize))
-          var daMx2Text = (xCenter + Math.sin(iRad+(sAngle*.55))*(r+pieTextSize))
-          var daMy2Text = (yCenter - Math.cos(iRad+(sAngle*.55))*(r+pieTextSize))
+          var pieTextBuffer = pieTextSize/4
+          var daMxText = (xCenter + Math.sin(iRad)*(r+pieTextBuffer))
+          var daMyText = (yCenter - Math.cos(iRad)*(r+pieTextBuffer))
+          var daMx2Text = (xCenter + Math.sin(iRad+(sAngle))*(r+pieTextBuffer))
+          var daMy2Text = (yCenter - Math.cos(iRad+(sAngle))*(r+pieTextBuffer))
 
           iRad = iRad+sAngle
   
@@ -404,17 +414,21 @@ var timeF = { //time filters to manage tiles of different years
                           "A "+r+" "+r+", 0, 0, 1, "+daMx2+" "+daMy2+
                           "L "+xCenter+" "+yCenter+" Z"
           var daTextSection = "M "+daMxText+" "+daMyText+
-                            "A "+(r+pieTextSize)+" "+(r+pieTextSize)+", 0, 0, 1, "+daMx2Text+" "+daMy2Text+
-                            "L "+xCenter+" "+yCenter+" Z"
+                            "A "+(r+pieTextBuffer)+" "+(r+pieTextBuffer)+", 0, 0, 1, "+daMx2Text+" "+daMy2Text
+                            // +
+                            // "L "+xCenter+" "+yCenter+" Z"
         // var daText =  '<text x=\"' + daMxText + '\" y=\"' + daMyText + '\" style=\"fill:#fff; stroke:rgb(136, 57, 43); stroke-width:2; alignment-baseline="middle" text-anchor="middle"; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ divArray[i] + '</text>' 
         // this previous version the text is like a ferryswheel. 
 
         // this next version the text is fallows the path  
         // var daText ='<text id=\"'+ 'textPath_'+ divArray[i]+'\" x=\"' + daMxText + '\" y=\"' + daMyText + '\"><textPath href=\"#path_' +divArray[i] + '\">'+
         //                     divArray[i] + '</textPath></text>'
-
-          var daTextPath =  '<path id=\"pathText_'+divArray[i]+ '\" class=\"pies ' + divArray[0] + '\" cx=\"' + xCenter + '\" cy=\"' 
-          + yCenter + '\" r=\"' + r + '\" d=\"' + daTextSection + '\" style=\"stroke-width:0; stroke: rgb(0, 0, 0); fill: none;\"></path>' 
+        var displayMask = ''  
+        if (this.textMask == true) {displayMask = ' display=\"none\" '}
+          var daTextPath =  '<path id=\"pathText_'+divArray[i]+ '\" class=\"pies ' + divArray[0] + ' pie-text-path\" cx=\"' + xCenter + '\" cy=\"' 
+          + yCenter + '\" r=\"' + r + '\" d=\"' + daTextSection + '\" style=\"stroke-width:0; stroke: rgb(0, 0, 0); fill: none;\"></path>' + 
+          '<text class=\"pie-text\" text-anchor=\"middle\"' + displayMask +'><textPath startOffset=\"50%\"  href=\"#pathText_' + divArray[i] + '\">'
+          + divArray[i] + '</textPath></text>' 
 
           if (document.getElementById('pathText_'+divArray[i])){
             var daPath = document.getElementById('pathText_'+divArray[i])
@@ -422,23 +436,25 @@ var timeF = { //time filters to manage tiles of different years
             daPath.setAttribute('d',daTextSection)
    
         }
-          var daText =  '<text style=\"alignment-baseline:middle;  font-size:' + pieTextSize +'px; \"><textPath href=\"#pathText_' + divArray[i] + '\">'+
-                            divArray[i] + '</textPath></text>'
-          
+        //   var daText =  '<text x=\"50%\" y=\"50%\" style=\"alignment-baseline:central;  font-size:' + pieTextSize +'px; \"><textPath href=\"#pathText_' + divArray[i] + '\">'+
+        //                     divArray[i] + '</textPath></text>'
+        var daText =  '<text text-anchor=\"middle\" class=\"pie-text-mask\" style=\ font-size:' + pieTextSize +'px; \"><textPath startOffset=\"50%\"  href=\"#pathText_' + divArray[i] + '\">'+
+        divArray[i] + '</textPath></text>'  
+
           daMask.innerHTML = '<path id=\"path_'+divArray[i]+ '\" class=\"daC pies ' + divArray[0] + '\" cx=\"' + xCenter + '\" cy=\"' 
                             + yCenter + '\" r=\"' + r + '\" d=\"' + daSection + '\" fill=\"#fdcc8a\"></path>' 
                             + daText
         var xmlns = "http://www.w3.org/2000/svg";
         var circle = document.createElementNS(xmlns, "g");
             circle.setAttributeNS('null', "class", "bRot");
-                var daInnerHTML = '<circle id=\"rotator_' + divArray[i] + '\" class=\"' + divArray[0] + ' ' + divArray[i] + ' rotator'+ '\" cx=\"' + daMx + '\" cy=\"' + daMy + '\" r=\"' + 20 + '\" '
+            var daInnerHTML = '<circle id=\"rotator_' + divArray[i] + '\" class=\"' + divArray[0] + ' ' + divArray[i] + ' rotator'+ '\" cx=\"' + daMx + '\" cy=\"' + daMy + '\" r=\"' + 20 + '\" '
                                         + 'xprop=\"' + xCenter + '\" yprop=\"' + yCenter + '\" '
                                         + 'lpie=\"'  + divArray.toString() + '"\ '
                                         + 'pierot=\"'  + iInputAngle + '\" '
                                         + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%;  pointer-events: fill;' 
                                         + '\" onmousedown=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" onmousemove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" onmouseup=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchstart=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" ontouchmove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" ontouchend=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchcancel=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\"' 
                                         + ' ></circle>' + daTextPath
-                                        circle.innerHTML = daInnerHTML
+            circle.innerHTML = daInnerHTML
 
         document.getElementById(this.svgParentName).appendChild(circle)                   
         // annoying Safari
@@ -827,7 +843,26 @@ var timeF = { //time filters to manage tiles of different years
                                                 for (i=0; i<daText.length;i++){
                                                     ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
                                                     daText[i].setAttributeNS(null,'y', ydis - timeF.divDimension.fontSize/2 - rRadio) 
-                                            }}
+                                            }
+                                                daText = daSVG.getElementsByClassName('text-above-circle')
+                                                for (i=0; i<daText.length;i++){
+                                                        var xChange = 0
+                                                        // ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
+                                                        var prevRadio = parseFloat(daText[i].getAttribute('radio')) 
+                                                        var yChange = prevRadio-rRadio // parseFloat(daText[i].getAttribute('y')) - daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2  - timeF.divDimension.fontSize/2 - rRadio                                   
+                                                        if (daText[i].getAttribute('transform') != null) {
+                                                            var befTrans = daText[i].getAttribute('transform')
+                                                            var befTransX = parseFloat(befTrans.split("(",)[1].split(" ")[0])
+                                                            var befTransY = parseFloat(befTrans.split("(",)[1].split(" ")[1])}
+                                                                else { var befTransX = 0; var befTransY= 0}
+                                                                var newX = befTransX + xChange
+                                                                var newY = befTransY + yChange
+                                                                daText[i].setAttributeNS(null,'transform',"translate("+newX+" "+newY+")")
+                                                                daText[i].setAttributeNS(null,'radio', rRadio) 
+                                                                } 
+                                            }    
+                                                
+                                            
                                             if (daSVG.getAttribute('pies') != null){
                                                 var rotation = parseFloat(daSVG.getAttribute("rotation"))
                                                 timeF.makePies(daSVG.getAttribute('pies').split('.'),rotation)}
