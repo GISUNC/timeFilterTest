@@ -19,8 +19,9 @@ var timeF = { //time filters to manage tiles of different years
     pieArray: [],
     contDivAssigned: false,
     contDiv: null, // the container div 
-    divNames : [], // array with the names of the divs which for example could be the date
+    divNames : [], // array with the names of the divs which for example could be the date. No spaces allowed.
     leafTiles: [], // array with the address to tiles or images 
+    filterNames: [],// array with the the names for the filters if needed and allows spaces 
     zoom: 17, // the leaflet zoom 
     center: [18, -65,], // the leaflet map center
     classType: "timeFdiv", // class assigned to the div in the container 
@@ -145,6 +146,9 @@ var timeF = { //time filters to manage tiles of different years
                         svgElem.setAttributeNS(null, "style", "-webkit-transform: translate3d(0,0,0); -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none; user-select: none; pointer-events: none; z-index: 1000");
                         if(this.leaflet == true){svgElem.setAttributeNS(null, "class", "leaflet-control upperSVG")}
                         daID = this.divNames[i];
+                        var daName = daID
+                        if(this.filterNames.length == this.divNames.length){daName = this.filterNames[i]}
+                        
                         // var posSVG = {id:daID, x:this.divDimension.width * xProp, y:this.divDimension.height * yProp,r: this.divDimension.r};
                         // this.animateSVG.positionArray.push(posSVG)
                         /// The SVG witht the arrows
@@ -201,10 +205,10 @@ var timeF = { //time filters to manage tiles of different years
                         var xText = (this.divDimension.width * xProp)// - this.divDimension.fontSize * 5;
                         var yText = (this.divDimension.height * yProp) - this.divDimension.fontSize/2 - this.divDimension.r;
                         // if (this.textMask == true)  {
-                        svgTextMask = '<text id=\"MaskText_' + daID + '\"' + ' class=\"textC\" x=\"' + xText + '\" y=\"' + yText + '\" style=\"alignment-baseline: middle; text-anchor: middle; rgb(255, 255, 255); font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daID + '</text>' 
+                        svgTextMask = '<text id=\"MaskText_' + daID + '\"' + ' class=\"textC\" x=\"' + xText + '\" y=\"' + yText + '\" style=\"alignment-baseline: middle; text-anchor: middle; rgb(255, 255, 255); font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daName + '</text>' 
                         // }
                         if (this.textMask == false)  {
-                            svgText = '<text id=\"circleText_' + daID + '\"' + ' class=\"text-above-circle\" radio=\"' + timeF.divDimension.r + '\" x=\"' + xText  + '\" y=\"' + yText + '\" style=\"z-index: 99999; alignment-baseline: middle; text-anchor: middle; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daID + '</text>' 
+                            svgText = '<text id=\"circleText_' + daID + '\"' + ' class=\"text-above-circle ' + daID +' \" radio=\"' + timeF.divDimension.r + '\" x=\"' + xText  + '\" y=\"' + yText + '\" style=\"z-index: 99999; alignment-baseline: middle; text-anchor: middle; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daName + '</text>' 
 
                             }
                         }
@@ -321,7 +325,6 @@ var timeF = { //time filters to manage tiles of different years
                             var newX = befTransX + xChange
                             var newY = befTransY + yChange
                             e.setAttributeNS(null,'transform',"translate("+newX+" "+newY+")")
-                            // console.log("translate("+newX+" "+newY+")")
                             } 
                 // new percent change Updaters  
                 document.querySelectorAll(".daC").forEach(e=>xyUpdater(e))
@@ -363,6 +366,7 @@ var timeF = { //time filters to manage tiles of different years
     makePies: function(divArray, iRad){ 
 
         this.updatePieArray({divArray, iRad})
+        
         if (iRad == null){iRad = .628;} // orginally was 36 degrees I changed it to radians
         var pies = divArray[0]
         var iInputAngle = iRad
@@ -385,10 +389,14 @@ var timeF = { //time filters to manage tiles of different years
         var xCenter = parseFloat(daMask0.getAttribute("cx"));
         var yCenter = parseFloat(daMask0.getAttribute("cy"));
         var nSVG = divArray.length
+                
         
+
         for (var i = 0; i < nSVG; i++){ 
             //remove the pointer from the rings 
-            if(i>0){document.querySelectorAll("circle.daR."+divArray[i]).forEach(e=>e.style.pointerEvents = "none")}
+            if(i>0){document.querySelectorAll("circle.daR."+divArray[i]).forEach(e=>e.style.pointerEvents = "none")
+                    document.querySelectorAll(".text-above-circle."+divArray[i]).forEach(e=>e.style.display = "none")
+            }
             // remove the rotator circles
           if(timeF.animateSVG.moveLoupe.circleRotator == false){
           document.querySelectorAll("."+ divArray[i]+".rotator").forEach(e=>e.parentNode.remove())
@@ -423,12 +431,13 @@ var timeF = { //time filters to manage tiles of different years
         // this next version the text is fallows the path  
         // var daText ='<text id=\"'+ 'textPath_'+ divArray[i]+'\" x=\"' + daMxText + '\" y=\"' + daMyText + '\"><textPath href=\"#path_' +divArray[i] + '\">'+
         //                     divArray[i] + '</textPath></text>'
+        var daName = this.filterNames[this.divNames.indexOf(divArray[i])]
         var displayMask = ''  
         if (this.textMask == true) {displayMask = ' display=\"none\" '}
           var daTextPath =  '<path id=\"pathText_'+divArray[i]+ '\" class=\"pies ' + divArray[0] + ' pie-text-path\" cx=\"' + xCenter + '\" cy=\"' 
           + yCenter + '\" r=\"' + r + '\" d=\"' + daTextSection + '\" style=\"stroke-width:0; stroke: rgb(0, 0, 0); fill: none;\"></path>' + 
           '<text class=\"pie-text\" text-anchor=\"middle\"' + displayMask +'><textPath startOffset=\"50%\"  href=\"#pathText_' + divArray[i] + '\">'
-          + divArray[i] + '</textPath></text>' 
+          + daName + '</textPath></text>' 
 
           if (document.getElementById('pathText_'+divArray[i])){
             var daPath = document.getElementById('pathText_'+divArray[i])
@@ -439,7 +448,7 @@ var timeF = { //time filters to manage tiles of different years
         //   var daText =  '<text x=\"50%\" y=\"50%\" style=\"alignment-baseline:central;  font-size:' + pieTextSize +'px; \"><textPath href=\"#pathText_' + divArray[i] + '\">'+
         //                     divArray[i] + '</textPath></text>'
         var daText =  '<text text-anchor=\"middle\" class=\"pie-text-mask\" style=\ font-size:' + pieTextSize +'px; \"><textPath startOffset=\"50%\"  href=\"#pathText_' + divArray[i] + '\">'+
-        divArray[i] + '</textPath></text>'  
+        daName + '</textPath></text>'  
 
           daMask.innerHTML = '<path id=\"path_'+divArray[i]+ '\" class=\"daC pies ' + divArray[0] + '\" cx=\"' + xCenter + '\" cy=\"' 
                             + yCenter + '\" r=\"' + r + '\" d=\"' + daSection + '\" fill=\"#fdcc8a\"></path>' 
@@ -898,8 +907,6 @@ var timeF = { //time filters to manage tiles of different years
                                         daSVGbutton.parentElement.parentElement.setAttributeNS(null, "transform", 'translate(' +  -1*bboxX + ' ' +  -1*bboxY + ')')                                      
                                         xdis = daSVGbutton.getBoundingClientRect().x - document.getElementById(timeF.divContainer).getBoundingClientRect().x + daSVGbutton.getBoundingClientRect().width/2
                                         ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
-                                        // console.log('daSVG.x = ' + daSVGbutton.getBoundingClientRect().x + ' getBoundingClientRect().x = ' + document.getElementById(timeF.divContainer).getBoundingClientRect().x + " daSVGbutton.width = " + daSVGbutton.getBoundingClientRect().width)
-                                        // console.log(newViewBox)
                                         var daC = daSVG.getElementsByClassName("daC")
                                         if (timeF.svgType == "circle"){
                                         for (i=0; i<daC.length;i++){
