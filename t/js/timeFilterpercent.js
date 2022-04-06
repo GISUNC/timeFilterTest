@@ -11,6 +11,7 @@ var timeF = { //time filters to manage tiles of different years
         if (this.leaflet == false) {this.assingImgToDivs(tileArray)}
         if (svgType == null) {this.svgType = "circle" } else {this.svgType = svgType};
         this.makeSVG()
+        this.listenResize()
     },
     divContainer: "daMap",
     svgParentName: "svgParent",
@@ -31,6 +32,7 @@ var timeF = { //time filters to manage tiles of different years
     text:true,
     textMask:false,
     namesInDiv : false,
+    windowDimension: {wX:window.innerWidth, wY:window.innerHeight },
     divDimension: { width:"", height:"",xCenter:"",yCenter:"",r:"", fontSize:20, xProp:.5, yProp:.5},
     toRadians: function(angle) {return angle * (Math.PI / 180);},
     toDegrees: function(angle) {return angle * (180 / Math.PI);},
@@ -145,6 +147,7 @@ var timeF = { //time filters to manage tiles of different years
                         svgElem.setAttributeNS(null, "viewBox", "0 0 " + this.divDimension.width + " " +this.divDimension.height);
                         svgElem.setAttributeNS(null, "style", "-webkit-transform: translate3d(0,0,0); -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none; user-select: none; pointer-events: none; z-index: 1000");
                         if(this.leaflet == true){svgElem.setAttributeNS(null, "class", "leaflet-control upperSVG")}
+                        if(this.leaflet == false){svgElem.setAttributeNS(null, "class", "upperSVG")}
                         daID = this.divNames[i];
                         var daName = daID
                         if(this.filterNames.length == this.divNames.length){daName = this.filterNames[i]}
@@ -271,7 +274,7 @@ var timeF = { //time filters to manage tiles of different years
                             this.animateSVG.updatePosition()
 
                         },
-    filterArray:["none","sepia(25%)","sepia(50%)","sepia(75%)","sepia(100%)"],
+    filterArray:["none","sepia(25%)","sepia(50%)","sepia(75%)"],//,"sepia(100%)"],
     assignFilters: function(filterArray){
         if (filterArray == null){filterArray = this.filterArray};
         if (filterArray.length != this.divNames.length){return console.log("div array not equal size of filter array")};
@@ -941,6 +944,28 @@ var timeF = { //time filters to manage tiles of different years
                                     } // End IF statmenet if moving the center of the circle
                                 },
                                                     }, // End of moveLoupe object                      
-                } //End of animSVG object
- 
+                }, //End of animSVG object
+ resize: function(){
+    this.calcDivDimensions()
+    var xUpdate = (window.innerWidth - this.windowDimension.wX)/2;
+    var yUpdate = (window.innerHeight - this.windowDimension.wY)/2;
+    timeF.updateMasks(xUpdate,yUpdate)
+    timeF.windowDimension.wY = window.innerHeight
+    timeF.windowDimension.wX = window.innerWidth
+    var vBoriginalX = document.getElementById(this.svgParentName).viewBox.baseVal.x
+    var vBoriginalY = document.getElementById(this.svgParentName).viewBox.baseVal.y
+    document.getElementById(this.svgParentName).setAttributeNS(null,'viewBox',vBoriginalX + " " + vBoriginalY + " "+window.innerWidth+" "+window.innerHeight)
+    
+    document.querySelectorAll(".upperSVG").forEach(e=>e.setAttributeNS(null,'viewBox',
+          e.viewBox.baseVal.x
+          +" "
+          +e.viewBox.baseVal.y
+          +" "+window.innerWidth+" "+window.innerHeight))
+  if(this.pieArray.length > 0){
+    this.pieArray.forEach(e=>timeF.makePies(e.divArray,e.iRad))}// timeF.start('daMap',tileArray,'circle',)}
+  },
+  listenResize: function(){  
+    window.addEventListener("resize", function() {timeF.resize()})
+    window.addEventListener("orientationchange", function() {timeF.resize()})
+}
 } // end of Time Filter Object
