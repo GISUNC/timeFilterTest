@@ -1,6 +1,7 @@
 // to do 
 // change the method for creating the pieArrays
 // remove text-above-circle when creating pie. 
+// replace the name leafTiles to imgTiles
 var timeF = { //time filters to manage tiles of different years
     start: function(containerDIV,tileArray,svgType, options) {
         this.divContainer = containerDIV;
@@ -61,7 +62,7 @@ var timeF = { //time filters to manage tiles of different years
                             }
                         }
                     },
-    assignNamesToDiv : function(containerDIVid){
+    assignNamesToDiv: function(containerDIVid){
                             if (containerDIVid == undefined && this.divContainer) {
                                 this.contDiv = document.getElementById(this.divContainer)
                                 }
@@ -82,8 +83,8 @@ var timeF = { //time filters to manage tiles of different years
                             this.calcDivDimensions();
                         },
     assignTilesToDivs : function(iDIV, iTile, i){
-        timeF.leafMaps[i] = L.map(iDIV, { zoomControl: false , attributionControl: false,}).setView(timeF.center, timeF.zoom);
-        L.tileLayer(iTile, {} ).addTo(timeF.leafMaps[i]);
+        this.leafMaps[i] = L.map(iDIV, { zoomControl: false , attributionControl: false,}).setView(this.center, this.zoom);
+        L.tileLayer(iTile, {} ).addTo(this.leafMaps[i]);
                         },
 
     divNamesFunction : function() {
@@ -98,6 +99,7 @@ var timeF = { //time filters to manage tiles of different years
                             if(this.divDimension.height == 0)  {this.divDimension.height = Math.floor(window.innerHeight)}
                             this.divDimension.xCenter = this.divDimension.width/2;
                             this.divDimension.yCenter = this.divDimension.height/2;
+                            // setting a default radio size based on the div dimension// maybe this line should be place somewhere else
                             if (this.divDimension.xCenter >= this.divDimension.yCenter && this.divDimension.r == "") {this.divDimension.r = this.divDimension.yCenter/3} else {this.divDimension.r = this.divDimension.xCenter/3}
                             
                         },
@@ -106,17 +108,10 @@ var timeF = { //time filters to manage tiles of different years
     svgType: "circle",
     svgButton:"", // svgTypes options: "circle", "pie", "circle-pie", "vertical", "horizontal",
     makeSVG : function(){ 
-                    // document.querySelectorAll('#'+this.svgParentName).forEach(e=>e.remove())
-                    // document.querySelectorAll(".daR").forEach(e=>e.remove())
-                    // document.querySelectorAll(".daC").forEach(e=>e.remove())
-                    // document.querySelectorAll(".textC").forEach(e=>e.remove())
-                    // document.querySelectorAll(".upB").forEach(e=>e.remove())
-                    this.svgParentName = 'svgParent' //+ this.counter
-                    // this.counter = this.counter + 1
-
+                    this.svgParentName = 'svgParent' 
                     const xmlns = "http://www.w3.org/2000/svg";
-                    xText = this.divDimension.xCenter - this.divDimension.fontSize;
-                    yText = this.divDimension.yCenter - this.divDimension.fontSize - this.divDimension.r;
+                    var xText = this.divDimension.xCenter - this.divDimension.fontSize;
+                    var yText = this.divDimension.yCenter - this.divDimension.fontSize - this.divDimension.r;
                      
                     //dealing with the annoying Safari I had to create an SVG that serves as a button that connects to the SVGs in the leaflet map
                     const svgParentElem = document.createElementNS(xmlns, "svg");
@@ -153,7 +148,7 @@ var timeF = { //time filters to manage tiles of different years
                         if(this.filterNames.length == this.divNames.length){daName = this.filterNames[i]}
                         
                         // var posSVG = {id:daID, x:this.divDimension.width * xProp, y:this.divDimension.height * yProp,r: this.divDimension.r};
-                        // this.animateSVG.positionArray.push(posSVG)
+                        // this.positionArray.push(posSVG)
                         /// The SVG witht the arrows
                         var daArrowN  = '<path id=\"daArrow_N_' + daID + '\" class=\"' + daID + ' arrow iAni\" d=\"M 250 235 L253.5 241.06217782649108 L246.5 241.06217782649108 Z\" fill=\"#000\" ></path>'   // check the stroke width in the CSS since it changes with the size of the container div
                         var daArrowS  = '<path id=\"daArrow_S_' + daID + '\" class=\"' + daID + ' arrow iAni\" d=\"M 250 265 L246.5 258.93782217350895 L253.5 258.93782217350895 Z\" fill=\"#000\" ></path>' 
@@ -163,39 +158,39 @@ var timeF = { //time filters to manage tiles of different years
                         var svgStrokeTouch = '';
                         
                         if (this.svgType == "circle" ) {
-                            svgStrokeTouch = '<circle id=\"daRadio_' + daID + '\" class=\"' + daID + ' daRadio daR radio-touch-event\" cx=\"' + (timeF.divDimension.width * xProp)+ '\" cy=\"' + (timeF.divDimension.height * yProp) + '\" r=\"' + timeF.divDimension.r + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
-                                        + '\" onmousedown=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" onmousemove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" onmouseup=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchstart=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" ontouchmove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" ontouchend=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchcancel=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\"' 
+                            svgStrokeTouch = '<circle id=\"daRadio_' + daID + '\" class=\"' + daID + ' daRadio daR radio-touch-event\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
+                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
                                         + '\"></circle></g>' 
                         }
 
                         if (this.svgType == "vertical") {
-                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (timeF.divDimension.width * xProp)+ '\" y1=\"' + (timeF.divDimension.height * 0) + '\" x2=\"' + (timeF.divDimension.width * xProp) + '\" y2=\"' + (timeF.divDimension.height) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ew-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
-                                        + '\" onmousedown=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" onmousemove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" onmouseup=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchstart=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" ontouchmove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" ontouchend=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchcancel=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\"' 
+                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * xProp)+ '\" y1=\"' + (this.divDimension.height * 0) + '\" x2=\"' + (this.divDimension.width * xProp) + '\" y2=\"' + (this.divDimension.height) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ew-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
+                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
                                         + '\"></line></g>' 
                         } 
 
                         if (this.svgType == "horizontal") {
-                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (timeF.divDimension.width * 0)+ '\" y1=\"' + (timeF.divDimension.height * yProp) + '\" x2=\"' + (timeF.divDimension.width) + '\" y2=\"' + (timeF.divDimension.height * yProp) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ns-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
-                                        + '\" onmousedown=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" onmousemove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" onmouseup=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchstart=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" ontouchmove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" ontouchend=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchcancel=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\"' 
+                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * 0)+ '\" y1=\"' + (this.divDimension.height * yProp) + '\" x2=\"' + (this.divDimension.width) + '\" y2=\"' + (this.divDimension.height * yProp) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ns-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
+                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
                                         + '\"></line></g>' 
                         } 
                         // Apply arrows depending on selection 
                         if (this.svgButton == "none"){var daArrowGroup = '';}
-                        if (this.svgButton == "all"|| (timeF.svgButton == '' && (this.svgType == "circle" || this.svgType == "circle-pie"))) {var daArrowGroup =  daArrowN + daArrowS + daArrowE + daArrowW}
-                        if (this.svgButton == "NS" || (timeF.svgButton == '' && this.svgType == "horizontal")) {var daArrowGroup =  daArrowN + daArrowS}
-                        if (this.svgButton == "EW" || (timeF.svgButton == '' && this.svgType == "vertical")) {var daArrowGroup =  daArrowE + daArrowW}
+                        if (this.svgButton == "all"|| (this.svgButton == '' && (this.svgType == "circle" || this.svgType == "circle-pie"))) {var daArrowGroup =  daArrowN + daArrowS + daArrowE + daArrowW}
+                        if (this.svgButton == "NS" || (this.svgButton == '' && this.svgType == "horizontal")) {var daArrowGroup =  daArrowN + daArrowS}
+                        if (this.svgButton == "EW" || (this.svgButton == '' && this.svgType == "vertical")) {var daArrowGroup =  daArrowE + daArrowW}
                         
 
                         var svgButtons = '<g id=\"gUp' + daID + '\"class=\"upB\"><g  class=\"' + daID + ' daCenterSVG\"' +
-                        'stroke=\"none\" stroke-width=\"4\" style=\"pointer-events: fill; position: absolute; cursor: move;\" onmousedown=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" onmousemove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" onmouseup=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchstart=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" ontouchmove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" ontouchend=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchcancel=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\">'+
+                        'stroke=\"none\" stroke-width=\"4\" style=\"pointer-events: fill; position: absolute; cursor: move;\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\">'+
                                             
                                         '<circle id=\"_' + daID + '\" class=\"' + daID + ' iAni daArrowCircle\"' +
                                         'xprop=\"' + xProp + '\"' + 'yprop=\"' + yProp + '\"' +
-                                        'cx= \"' + (timeF.divDimension.width * xProp) +
-                                        '\" cy= \"' + (timeF.divDimension.height * yProp) +
+                                        'cx= \"' + (this.divDimension.width * xProp) +
+                                        '\" cy= \"' + (this.divDimension.height * yProp) +
                                         '\" r=\"20\"' +
                                         '></circle>'  +
-                                        '<g id=\"arrowGroup' + daID + '\" class=\"arrowGroup\" transform= \"translate('+ ((timeF.divDimension.width*xProp)-250) + ' ' + ((timeF.divDimension.height*yProp)-250) + ')\" style=\"pointer-events: none\">' + // I had to do the translate to 500 500 since the original shape was based on 500 by 500
+                                        '<g id=\"arrowGroup' + daID + '\" class=\"arrowGroup\" transform= \"translate('+ ((this.divDimension.width*xProp)-250) + ' ' + ((this.divDimension.height*yProp)-250) + ')\" style=\"pointer-events: none\">' + // I had to do the translate to 500 500 since the original shape was based on 500 by 500
                                         daArrowGroup +
                                         '</g></g>' +
                                         svgStrokeTouch
@@ -208,22 +203,22 @@ var timeF = { //time filters to manage tiles of different years
                         var xText = (this.divDimension.width * xProp)// - this.divDimension.fontSize * 5;
                         var yText = (this.divDimension.height * yProp) - this.divDimension.fontSize/2 - this.divDimension.r;
                         // if (this.textMask == true)  {
-                        svgTextMask = '<text id=\"MaskText_' + daID + '\"' + ' class=\"textC\" x=\"' + xText + '\" y=\"' + yText + '\" style=\"alignment-baseline: middle; text-anchor: middle; rgb(255, 255, 255); font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daName + '</text>' 
+                        svgTextMask = '<text id=\"MaskText_' + daID + '\"' + ' class=\"textC\" x=\"' + xText + '\" y=\"' + yText + '\" style=\"alignment-baseline: middle; text-anchor: middle; rgb(255, 255, 255); font-size: ' + this.divDimension.fontSize + 'px;\">'+ daName + '</text>' 
                         // }
                         if (this.textMask == false)  {
-                            svgText = '<text id=\"circleText_' + daID + '\"' + ' class=\"text-above-circle ' + daID +' \" radio=\"' + timeF.divDimension.r + '\" x=\"' + xText  + '\" y=\"' + yText + '\" style=\"z-index: 99999; alignment-baseline: middle; text-anchor: middle; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ daName + '</text>' 
+                            svgText = '<text id=\"circleText_' + daID + '\"' + ' class=\"text-above-circle ' + daID +' \" radio=\"' + this.divDimension.r + '\" x=\"' + xText  + '\" y=\"' + yText + '\" style=\"z-index: 99999; alignment-baseline: middle; text-anchor: middle; font-size: ' + this.divDimension.fontSize + 'px;\">'+ daName + '</text>' 
 
                             }
                         }
 
                         var svgCircleMaskAndRing = '<clipPath id=\"mask_' + daID + '\"' + 
                             '><circle id=\"maskC_' + daID + '\"' + 'class=\"daC daR' + 
-                            '\" cx= \"' + (timeF.divDimension.width * xProp) +
-                            '\" cy= \"' + (timeF.divDimension.height * yProp) +
-                            '\" r=\"' + timeF.divDimension.r + '\"></circle>' + 
+                            '\" cx= \"' + (this.divDimension.width * xProp) +
+                            '\" cy= \"' + (this.divDimension.height * yProp) +
+                            '\" r=\"' + this.divDimension.r + '\"></circle>' + 
                             svgTextMask +
                             '</clipPath>'  +
-                            '<circle id=\"daRadioStroke_' + daID + '\" class=\"' + daID + ' daAnim daRadio daR radio-stroke\" cx=\"' + (timeF.divDimension.width * xProp)+ '\" cy=\"' + (timeF.divDimension.height * yProp) + '\" r=\"' + timeF.divDimension.r + '\" ' 
+                            '<circle id=\"daRadioStroke_' + daID + '\" class=\"' + daID + ' daAnim daRadio daR radio-stroke\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r + '\" ' 
                             +
                             'style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0.5; cursor: pointer; stroke-width: 1%;'
                             + '\"></circle>' + svgText;
@@ -237,10 +232,10 @@ var timeF = { //time filters to manage tiles of different years
 
                         var svgRectMask = '<clipPath id=\"mask_' + daID + '\"' + 
                         '><rect id=\"maskC_' + daID + '\"' + 'class=\"daC daR' + 
-                        '\" x= \"' + (timeF.divDimension.width * xProp) +
-                        '\" y= \"' + (timeF.divDimension.height * yProp) +
-                        '\" width=\"' + timeF.divDimension.width + 
-                        '\" height=\"' + timeF.divDimension.height  + 
+                        '\" x= \"' + (this.divDimension.width * xProp) +
+                        '\" y= \"' + (this.divDimension.height * yProp) +
+                        '\" width=\"' + this.divDimension.width + 
+                        '\" height=\"' + this.divDimension.height  + 
                         '\"></rect>' 
                         svgElem.innerHTML = svgRectMask 
                         }
@@ -271,45 +266,34 @@ var timeF = { //time filters to manage tiles of different years
                             if(this.leaflet == false){
                                 document.getElementById(this.divNames[0]).appendChild(svgParentElem)
                             }
-                            this.animateSVG.updatePosition()
-
+                            this.updatePosition()
                         },
+
     filterArray:["none","sepia(25%)","sepia(50%)","sepia(75%)"],//,"sepia(100%)"],
     assignFilters: function(filterArray){
         if (filterArray == null){filterArray = this.filterArray};
         if (filterArray.length != this.divNames.length){return console.log("div array not equal size of filter array")};
-        if (this.leaflet == true) {this.divNames.forEach((e,i)=>document.getElementById(e).querySelectorAll(".leaflet-tile-pane").forEach(pane=> pane.style.filter = this.filterArray[i])) }
+        if (this.leaflet == true) {this.divNames.forEach((e,i)=>document.getElementById(e).querySelectorAll(".leaflet-tile-pane").forEach(pane=> pane.style.filter = filterArray[i])) }
         if (this.leaflet == false) {this.divNames.forEach((e,i)=>document.getElementById(e).style.filter = filterArray[i])}
-
     },
     updateMasks: function(xChange, yChange){
                 // update the mask center and SVG when changing the div dimensions
                 // hopefully this will fix the problem that the masks get separeted from the SVGs when we change the size of the windows     
                 // to do calculate the change in dimensions and apply it to the map. This will be applied to all elements that have a cordinate x and y. 
                 // some ideas to think, let the circles free flow or move with the accelerometer. 
+                var divWidth = this.divDimension.width
+                var divHeight = this.divDimension.height
                 function xyUpdater(e) {
                     var befX = parseFloat(e.getAttribute('cx'))
                     var befY= parseFloat(e.getAttribute('cy'))
                     e.setAttributeNS(null,'cx',(befX+xChange))
                     e.setAttributeNS(null,'cy',(befY+yChange))
                     if (e.getAttribute('xprop')){
-                        e.setAttributeNS(null,'xprop',(befX+xChange)/(timeF.divDimension.width))
+                        e.setAttributeNS(null,'xprop',(befX+xChange)/(divWidth))
                     }
                     if (e.getAttribute('yprop')){
-                        e.setAttributeNS(null,'yprop',(befY+yChange)/(timeF.divDimension.height))
+                        e.setAttributeNS(null,'yprop',(befY+yChange)/(divHeight))
                     }
-                    // update the svgs
-                    // console.log("x:"+ xChange + " y:" + yChange)
-                    // var daSVGupdate = document.getElementById("svg_"+(e.id.split('_')[1]))
-                    // var befXBox = parseFloat(daSVGupdate.getAttribute('viewBox').split(" ")[0])
-                    // var befYBox= parseFloat(daSVGupdate.getAttribute('viewBox').split(" ")[1])
-
-                    // var newViewBox= (befXBox-xChange) + " " + (befYBox-yChange) + " " + window.innerWidth + " " + window.innerHeight
-                    
-                    // // console.log(newViewBox)
-                    // daSVGupdate.setAttributeNS(null,'viewBox',newViewBox)
-                    
-                    // document.getElementById("daRadio_"+(e.id.split('_')[1])).setAttributeNS(null,'cy',(befY+yChange))
                  }
 
                  function xyTextUpdater(e) {
@@ -330,6 +314,7 @@ var timeF = { //time filters to manage tiles of different years
                             e.setAttributeNS(null,'transform',"translate("+newX+" "+newY+")")
                             } 
                 // new percent change Updaters  
+                // define classes that will represent several groups that need to be updated
                 document.querySelectorAll(".daC").forEach(e=>xyUpdater(e))
                 document.querySelectorAll(".arrowGroup").forEach(e=>xyTranslator(e))
                 document.querySelectorAll(".radio-stroke").forEach(e=>xyUpdater(e))
@@ -337,17 +322,6 @@ var timeF = { //time filters to manage tiles of different years
                 document.querySelectorAll(".textC").forEach(e=>xyTextUpdater(e))
                 document.querySelectorAll(".daArrowCircle").forEach(e=>xyUpdater(e))
                 document.querySelectorAll(".text-above-circle").forEach(e=>xyTextUpdater(e))
-                
-                // I am seem like i am missing to update the radio button
-
-                
-                // document.querySelectorAll(".daRadio").forEach(e=>xyTranslator(e))
-
-                // document.querySelectorAll(".daRadio").forEach(e=>xyTranslator(e))
-
-
-
-                // document.querySelectorAll(".daArrowCircle").forEach(e=>xyUpdater(e))
             },
     // THIS method definitivamente necesita ser mejorado        
     objTest:undefined,        
@@ -366,10 +340,9 @@ var timeF = { //time filters to manage tiles of different years
         }
         
     },
-    makePies: function(divArray, iRad){ 
 
+    makePies: function(divArray, iRad){ 
         this.updatePieArray({divArray, iRad})
-        
         if (iRad == null){iRad = .628;} // orginally was 36 degrees I changed it to radians
         var pies = divArray[0]
         var iInputAngle = iRad
@@ -378,7 +351,7 @@ var timeF = { //time filters to manage tiles of different years
                 }
         //var svgParent = document.getElementById('SVGparent');
         var daSVG0 = document.getElementById("svg_" + divArray[0])
-        if (daSVG.getAttribute('pies') == null)
+        if (this.daSVG.getAttribute('pies') == null)
         {var maskOrPath = "maskC_"}
         else 
         {var maskOrPath = "path_"}
@@ -401,7 +374,7 @@ var timeF = { //time filters to manage tiles of different years
                     document.querySelectorAll(".text-above-circle."+divArray[i]).forEach(e=>e.style.display = "none")
             }
             // remove the rotator circles
-          if(timeF.animateSVG.moveLoupe.circleRotator == false){
+          if(this.circleRotator == false){
           document.querySelectorAll("."+ divArray[i]+".rotator").forEach(e=>e.parentNode.remove())
         }
           var daSVGmerge = document.getElementById("svg_" + divArray[i])
@@ -412,7 +385,7 @@ var timeF = { //time filters to manage tiles of different years
           var daMx2 = (xCenter + Math.sin(iRad+sAngle)*r)
           var daMy2 = (yCenter - Math.cos(iRad+sAngle)*r)
           //Need to make a better calculation of the size of the arc size. 
-          var pieTextSize = timeF.divDimension.fontSize
+          var pieTextSize = this.divDimension.fontSize
           var pieTextBuffer = pieTextSize/4
           var daMxText = (xCenter + Math.sin(iRad)*(r+pieTextBuffer))
           var daMyText = (yCenter - Math.cos(iRad)*(r+pieTextBuffer))
@@ -426,14 +399,7 @@ var timeF = { //time filters to manage tiles of different years
                           "L "+xCenter+" "+yCenter+" Z"
           var daTextSection = "M "+daMxText+" "+daMyText+
                             "A "+(r+pieTextBuffer)+" "+(r+pieTextBuffer)+", 0, 0, 1, "+daMx2Text+" "+daMy2Text
-                            // +
-                            // "L "+xCenter+" "+yCenter+" Z"
-        // var daText =  '<text x=\"' + daMxText + '\" y=\"' + daMyText + '\" style=\"fill:#fff; stroke:rgb(136, 57, 43); stroke-width:2; alignment-baseline="middle" text-anchor="middle"; font-size: ' + timeF.divDimension.fontSize + 'px;\">'+ divArray[i] + '</text>' 
-        // this previous version the text is like a ferryswheel. 
-
-        // this next version the text is fallows the path  
-        // var daText ='<text id=\"'+ 'textPath_'+ divArray[i]+'\" x=\"' + daMxText + '\" y=\"' + daMyText + '\"><textPath href=\"#path_' +divArray[i] + '\">'+
-        //                     divArray[i] + '</textPath></text>'
+      
         var daName = this.filterNames[this.divNames.indexOf(divArray[i])]
         var displayMask = ''  
         if (this.textMask == true) {displayMask = ' display=\"none\" '}
@@ -448,8 +414,6 @@ var timeF = { //time filters to manage tiles of different years
             daPath.setAttribute('d',daTextSection)
    
         }
-        //   var daText =  '<text x=\"50%\" y=\"50%\" style=\"alignment-baseline:central;  font-size:' + pieTextSize +'px; \"><textPath href=\"#pathText_' + divArray[i] + '\">'+
-        //                     divArray[i] + '</textPath></text>'
         var daText =  '<text text-anchor=\"middle\" class=\"pie-text-mask\" style=\ font-size:' + pieTextSize +'px; \"><textPath startOffset=\"50%\"  href=\"#pathText_' + divArray[i] + '\">'+
         daName + '</textPath></text>'  
 
@@ -464,7 +428,7 @@ var timeF = { //time filters to manage tiles of different years
                                         + 'lpie=\"'  + divArray.toString() + '"\ '
                                         + 'pierot=\"'  + iInputAngle + '\" '
                                         + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%;  pointer-events: fill;' 
-                                        + '\" onmousedown=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" onmousemove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" onmouseup=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchstart=\"timeF.animateSVG.moveLoupe.onMouseDown(evt)\" ontouchmove=\"timeF.animateSVG.moveLoupe.onMouseMove(evt)\" ontouchend=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\" ontouchcancel=\"timeF.animateSVG.moveLoupe.onMouseUp(evt)\"' 
+                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
                                         + ' ></circle>' + daTextPath
             circle.innerHTML = daInnerHTML
 
@@ -479,13 +443,27 @@ var timeF = { //time filters to manage tiles of different years
         daRadioStrokei.setAttributeNS(null,"cy",daRadioCY)
         daRadioStrokei.setAttributeNS(null,"r",daRadioR)
     }
-        daSVG.setAttributeNS("null","pies", pies)
-        daSVG.setAttributeNS("null","rotation", iInputAngle)
+        this.daSVG.setAttributeNS("null","pies", pies)
+        this.daSVG.setAttributeNS("null","rotation", iInputAngle)
           }
         },
     svgPiesObjs:[],
     svgPiesArray: [],
-    animateSVG : {  
+    setActiveSVG: function(){for(i=0; i<this.divNames.length;i++){
+        if(this.currentID == this.divNames[i]){this.activeSVG = i};};
+    },
+    updatePosition: function(){
+                this.positionArray = []
+                var daC = document.getElementsByClassName("daC")
+                for (i=0; i<daC.length; i++){
+                    var daObj = {   id: daC[i].getAttribute("id").split("_")[1], 
+                                    x: daC[i].getAttribute("cx"), 
+                                    y: daC[i].getAttribute("cy"), 
+                                    r: daC[i].getAttribute("r")
+                                }
+                                this.positionArray.push(daObj);
+                }
+            },
                     newP: { x: 0, y: 0 }, 
                     newR: 0,
                     position: { x: 0, y: 0 },
@@ -494,26 +472,17 @@ var timeF = { //time filters to manage tiles of different years
                     activePies:"",
                     pieRotInit:0,
                     pieRotDelta:0,
-                    setActiveSVG: function(){for(i=0; i<timeF.divNames.length;i++){
-                                        if(this.moveLoupe.currentID == timeF.divNames[i]){timeF.animateSVG.activeSVG = i};};
-                                    },
-                    updatePosition: function(){
-                                                this.positionArray = []
-                                                var daC = document.getElementsByClassName("daC")
-                                                for (i=0; i<daC.length; i++){
-                                                    var daObj = {   id: daC[i].getAttribute("id").split("_")[1], 
-                                                                    x: daC[i].getAttribute("cx"), 
-                                                                    y: daC[i].getAttribute("cy"), 
-                                                                    r: daC[i].getAttribute("r")
-                                                                }
-                                                                this.positionArray.push(daObj);
-                                                }
-                                            },
+
                     positionArray: [], // {id:"back",x:0,y:0,r:0} working with pies so each cicle "knows" their relative distance
                     mergeSVG: true, // i am going to use this to instruct if it is ok to merge the circles
                     distanceArray: [0],// an array that will know the relative distance to the active circle
                     insideArray: [false],
-                    calculateDistance: function(){
+                    minDistance: 10, // minimum distance for the circles to be merged 
+                    mousedown: 0,
+                    bmousedown:0, 
+                    // NEW End for the animateSVG object},
+
+            calculateDistance: function(){
                                         this.distanceArray = []
                                         this.insideArray = []
                                         var curI = 0;
@@ -522,7 +491,7 @@ var timeF = { //time filters to manage tiles of different years
                                         var curR = 0;
                         
                                         for (i=0;i < this.positionArray.length; i++){
-                                            if (this.positionArray[i].id === this.moveLoupe.currentID) // make this better
+                                            if (this.positionArray[i].id === this.currentID) // make this better
                                             {   curI = i
                                                 curX = this.positionArray[i].x; 
                                                 curY = this.positionArray[i].y
@@ -535,35 +504,34 @@ var timeF = { //time filters to manage tiles of different years
                                             var elObj = this.positionArray[i]
                                             var newDis = Math.sqrt( Math.pow((curX - elObj.x),2) + Math.pow((curY - elObj.y),2))
                                             this.distanceArray.push(newDis)
-                                            if (newDis > 0 && newDis < curR/2 && this.positionArray[i].id != this.moveLoupe.currentID) { // made smaller rad
+                                            if (newDis > 0 && newDis < curR/2 && this.positionArray[i].id != this.currentID) { // made smaller rad
                                                                     isInside = 1;
                                                                     if (this.mergeSVG == true){
                                                                         var divArray = []
-                                                                        if (daSVG.getAttribute('pies') == null) {
+                                                                        if (this.daSVG.getAttribute('pies') == null) {
                                                                             divArray=[this.positionArray[curI].id, this.positionArray[i].id];
                                                                             document.querySelectorAll(".iAni."+this.positionArray[i].id).forEach(e=>e.parentNode.removeChild(e))
                                                                             // this.positionArray.splice(i,1)
                                                                         }
-                                                                        else {  divArray = daSVG.getAttribute("pies").split('.');
+                                                                        else {  divArray = this.daSVG.getAttribute("pies").split('.');
                                                                                 divArray.push(this.positionArray[i].id);
                                                                                 document.querySelectorAll(".iAni."+this.positionArray[i].id).forEach(e=>e.parentNode.removeChild(e))
-                                                                                var rotation = parseFloat(daSVG.getAttribute("rotation"))
-                                                                                timeF.makePies(divArray, rotation);
+                                                                                var rotation = parseFloat(this.daSVG.getAttribute("rotation"))
+                                                                                this.makePies(divArray, rotation);
                                                                                 return false}
-                                                                        timeF.makePies(divArray)}
+                                                                        this.makePies(divArray)}
                                             };
-                                            if (this.positionArray[i].id === this.moveLoupe.currentID) {isInside = -1}
+                                            if (this.positionArray[i].id === this.currentID) {isInside = -1}
                                             this.insideArray.push(isInside)
                                             };
                                         },
-                    minDistance: 10, // minimum distance for the circles to be merged 
-                    mousedown: 0, 
+                 
                     addListerners: function(){
-                        window.addEventListener("mouseup", timeF.animateSVG.moveLoupe.onMouseUp);
+                        window.addEventListener("mouseup", timeF.onMouseUp);
                     },
                     radioAnimationOn: function(classQuery) {
                         daAnim = document.querySelectorAll(classQuery)
-                        for (i = 0; i < daAnim.length; i++) {
+                        for (var i = 0; i < daAnim.length; i++) {
                           daAnim[i].style.strokeWidth= "1%";
                           daAnim[i].style.animation = "dash .4s linear"
                           daAnim[i].style.animationIterationCount = "1" ;
@@ -579,7 +547,8 @@ var timeF = { //time filters to manage tiles of different years
                                   } 
                     },
                     aniArrowsInit: function(classQuery){ 
-                                    setTimeout(function(){timeF.animateSVG.animationApagao(classQuery); timeF.animateSVG.radioAnimationOff(".daAnim")},4000);
+                                    setTimeout(function(){this.animationApagao(classQuery); 
+                                        this.radioAnimationOff(".daAnim")},4000);
                         },
                     animationApagao: function (classQuery){
                                 daArrows = document.querySelectorAll(classQuery);
@@ -594,7 +563,7 @@ var timeF = { //time filters to manage tiles of different years
                               daAnim[i].style.animation = "none"; 
                             }
                             },
-                    moveLoupe: {
+                    // moveLoupe: { // remvove the mouveloupe object
                         currentID:"",
                         ownerDiv: null,
                         ownerSVG: null,
@@ -605,201 +574,199 @@ var timeF = { //time filters to manage tiles of different years
                         yCirculo: 0,
                         offset: null,
 
-                        onClick: function(){
-                            timeF.animateSVG.moveLoupe.onMouseUp();
-                        },
-
                         getMouse: function (evt){
-                                    timeF.animateSVG.position.x = evt.clientX;
-                                    timeF.animateSVG.position.y = evt.clientY;
-                                    return timeF.animateSVG.position
+                                    this.position.x = evt.clientX;
+                                    this.position.y = evt.clientY;
+                                    return this.position
                                     },
+                        daSVGbutton:undefined,
+                        daSVG:undefined,
                    
                         onMouseDown: function(evt){
                                 // Loop to dissable the Leaflet dragging // change to an arrow forEach function 
-                                if(timeF.leaflet == true){
-                                for (i=0; i<timeF.leafMaps.length; i++) {
-                                    timeF.leafMaps[i].dragging.disable()
+                                if(this.leaflet == true){
+                                for (var i=0; i<this.leafMaps.length; i++) {
+                                    this.leafMaps[i].dragging.disable()
                                     }}
                                     // maybe do an if statemet to make it not ittarate eavery time, 
                                     document.querySelectorAll(".daAnim, .arrow").forEach(e=>e.style.animation = "none")
-                                    timeF.animateSVG.moveLoupe.currentID = evt.target.getAttribute("class").split(" ")[0] // gets the ID from the class //there has to be a better way
-                                    daSVG = document.getElementById("svg_" + timeF.animateSVG.moveLoupe.currentID)
-                                    daSVGbutton = evt.target
-                                    if (daSVGbutton.nodeName == 'line'){daSVGbutton = document.getElementById(daSVGbutton.id.split("daLine")[1])}
+                                    this.currentID = evt.target.getAttribute("class").split(" ")[0] // gets the ID from the class //there has to be a better way
+                                    this.daSVG = document.getElementById("svg_" + this.currentID)
+                                    this.daSVGbutton = evt.target
+                                    if (this.daSVGbutton.nodeName == 'line'){this.daSVGbutton = document.getElementById(daSVGbutton.id.split("daLine")[1])}
                                     var daCircle = evt.target
-                                    if (daSVGbutton.nodeName == 'line'){daCircle = document.getElementById(daSVGbutton.id.split("daLine")[1])}
-                                    timeF.divDimension.xProp = parseFloat(daCircle.getAttribute("xprop"))
-                                    timeF.divDimension.yProp = parseFloat(daCircle.getAttribute("yprop"))
+                                    if (this.daSVGbutton.nodeName == 'line'){daCircle = document.getElementById(this.daSVGbutton.id.split("daLine")[1])}
+                                    this.divDimension.xProp = parseFloat(daCircle.getAttribute("xprop"))
+                                    this.divDimension.yProp = parseFloat(daCircle.getAttribute("yprop"))
                                     
                                     //If statement has pie rotator
                                     if (evt.target.getElementsByClassName("rotator")){
-                                    timeF.animateSVG.moveLoupe.activePies = daCircle.getAttribute('lpie')
-                                    timeF.animateSVG.moveLoupe.pieRot = parseFloat(daCircle.getAttribute('pierot'))}
-                                    timeF.animateSVG.moveLoupe.ownerSVG = daSVG;
+                                    this.activePies = daCircle.getAttribute('lpie')
+                                    this.pieRot = parseFloat(daCircle.getAttribute('pierot'))}
+                                    this.ownerSVG = this.daSVG;
                                     
-                                    if (timeF.leaflet == true){timeF.animateSVG.moveLoupe.ownerDiv = timeF.animateSVG.moveLoupe.ownerSVG.parentElement.parentElement;}
-                                    else {timeF.animateSVG.moveLoupe.ownerDiv = timeF.animateSVG.moveLoupe.ownerSVG.parentElement}
+                                    if (this.leaflet == true){this.ownerDiv = this.ownerSVG.parentElement.parentElement;}
+                                    else {this.ownerDiv = this.ownerSVG.parentElement}
                                     
-                                    timeF.animateSVG.moveLoupe.offset = timeF.animateSVG.moveLoupe.ownerDiv.getBoundingClientRect()
+                                    this.offset = this.ownerDiv.getBoundingClientRect()
                                    
-                                    daC = daSVG.getElementsByClassName("daC")
+                                    var daC = this.daSVG.getElementsByClassName("daC")
                                         for (i=0; i<daC.length;i++){ //THERE HAS TO BE A BETTER WAY
-                                            timeF.animateSVG.moveLoupe.xCirculo = parseInt(daC[i].getAttribute("cx"))
-                                            timeF.animateSVG.moveLoupe.yCirculo = parseInt(daC[i].getAttribute("cy"))
+                                            this.xCirculo = parseInt(daC[i].getAttribute("cx"))
+                                            this.yCirculo = parseInt(daC[i].getAttribute("cy"))
                                          }
                                         // TO DO make false statments of other circleMove circleRadio circleRotator
                                         //Start if statment of rotator
-                                        if (evt.target.classList.contains("rotator") && timeF.animateSVG.moveLoupe.circleMove == false && timeF.animateSVG.moveLoupe.circleRadio == false) 
+                                        if (evt.target.classList.contains("rotator") && this.circleMove == false && this.circleRadio == false) 
                                         {//
-                                        timeF.animateSVG.moveLoupe.circleRotator = true; 
+                                        this.circleRotator = true; 
                                         
-                                        daRadio = document.querySelectorAll('.'+timeF.animateSVG.moveLoupe.currentID+'.daR')
+                                        var daRadio = document.querySelectorAll('.'+this.currentID+'.daR')
                                         for (i=0;i < daRadio.length; i++){
                                             daRadio[i].style.pointerEvents  = "none";
                                         }
-                                        daRing = timeF.animateSVG.moveLoupe.ownerSVG.getElementsByClassName("iAni");
+                                        daRing = this.ownerSVG.getElementsByClassName("iAni");
                                         for (i=0;i < daRing.length; i++){
                                             daRing[i].style.pointerEvents  = "none";
                                         }    
-                                        timeF.animateSVG.bmousedown=3;
+                                        this.bmousedown=3;
                                         } // END IF statement of Rotator
 
                                     //// Start IF statement of Radio (ring)
-                                    if (evt.target.classList.contains("daRadio") && timeF.animateSVG.moveLoupe.circleMove == false) 
+                                    if (evt.target.classList.contains("daRadio") && this.circleMove == false) 
                                         {//
-                                        timeF.animateSVG.moveLoupe.circleRadio = true; 
+                                        this.circleRadio = true; 
                                         
-                                        if(daSVG.getAttribute('pies'))
-                                            {daSVG.getAttribute("pies").split('.').forEach(e=>timeF.animateSVG.radioStrikeOn('.'+e+'.daR.daAnim'))}
-                                        else{timeF.animateSVG.radioStrikeOn('.'+timeF.animateSVG.moveLoupe.currentID+'.daR.daAnim')}                                                
+                                        if(this.daSVG.getAttribute('pies'))
+                                            {this.daSVG.getAttribute("pies").split('.').forEach(e=>this.radioStrikeOn('.'+e+'.daR.daAnim'))}
+                                        else{this.radioStrikeOn('.'+this.currentID+'.daR.daAnim')}                                                
                                         
 
-                                        daRing = timeF.animateSVG.moveLoupe.ownerSVG.getElementsByClassName("iAni");
+                                        daRing = this.ownerSVG.getElementsByClassName("iAni");
                                         for (i=0;i < daRing.length; i++){
                                             daRing[i].style.pointerEvents  = "none";
                                         }    
-                                        timeF.animateSVG.bmousedown=2;
+                                        this.bmousedown=2;
                                         } // END IF statement of Radio 
                                     
                                     // Start if statement on Arrow and center button 
-                                    if (evt.target.classList.contains("iAni") && timeF.animateSVG.moveLoupe.circleRadio == false) 
+                                    if (evt.target.classList.contains("iAni") && this.circleRadio == false) 
                                         {
-                                        timeF.animateSVG.moveLoupe.circleMove = true; 
-                                        if(daSVG.getAttribute('pies'))
-                                        {daSVG.getAttribute("pies").split('.').forEach(e=>timeF.animateSVG.radioAnimationOff('.'+e+'.daR.daAnim'))}
-                                        else{timeF.animateSVG.radioAnimationOff('.'+timeF.animateSVG.moveLoupe.currentID+'.daR.daAnim');}   
-                                        daCenterSVG = document.querySelectorAll( '.'+timeF.animateSVG.moveLoupe.currentID+'.daCenterSVG')            
+                                        this.circleMove = true; 
+                                        if(this.daSVG.getAttribute('pies'))
+                                        {this.daSVG.getAttribute("pies").split('.').forEach(e=>this.radioAnimationOff('.'+e+'.daR.daAnim'))}
+                                        else{this.radioAnimationOff('.'+this.currentID+'.daR.daAnim');}   
+                                        daCenterSVG = document.querySelectorAll( '.'+this.currentID+'.daCenterSVG')            
                                         
                                         for (i=0;i < daCenterSVG.length; i++){
                                             daCenterSVG[i].style.animation  = "none"
                                             daCenterSVG[i].style.opacity  = ".5"
                                         }    
                                 
-                                        daRadio = document.querySelectorAll('.'+timeF.animateSVG.moveLoupe.currentID+'.daR')
+                                        var daRadio = document.querySelectorAll('.'+this.currentID+'.daR')
                                         for (i=0;i < daRadio.length; i++){
                                             daRadio[i].style.pointerEvents  = "none";
                                         }    
-                                        timeF.animateSVG.bmousedown=1;                                      
+                                        this.bmousedown=1;                                      
                                         }
                                     // End IF statement on Arrow and center button                            
                                     
                                     // If statement for touch events // I should do more research on this but it worked at least for cellphones
                                     if (evt.touches){
-                                            timeF.animateSVG.newP=timeF.animateSVG.moveLoupe.getMouse(evt.touches[0])
-                                            if (timeF.animateSVG.moveLoupe.circleRotator == true)
-                                            {timeF.animateSVG.moveLoupe.pieRotInit = Math.PI - Math.atan2((timeF.animateSVG.newP.x - timeF.divDimension.xProp),(timeF.animateSVG.newP.y - timeF.divDimension.yProp))
+                                            this.newP=this.getMouse(evt.touches[0]) // check if this this is a problem 
+                                            if (this.circleRotator == true)
+                                            {this.pieRotInit = Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))
                                             }
-                                            timeF.animateSVG.moveLoupe.doUpdate(evt) // veryfy touchscreen
+                                            this.doUpdate(evt) // veryfy touchscreen
                                            }
                                     else{
-                                            timeF.animateSVG.newP=timeF.animateSVG.moveLoupe.getMouse(evt);
-                                            if (timeF.animateSVG.moveLoupe.circleRotator == true)
-                                            {timeF.animateSVG.moveLoupe.pieRotInit = Math.PI - Math.atan2((timeF.animateSVG.newP.x - timeF.divDimension.xProp),(timeF.animateSVG.newP.y - timeF.divDimension.yProp))
+                                            this.newP=this.getMouse(evt);
+                                            if (this.circleRotator == true)
+                                            {this.pieRotInit = Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))
                                                 }
                                            
-                                            timeF.animateSVG.moveLoupe.doUpdate(evt);
+                                            this.doUpdate(evt);
                                         }
                                     
-                                    window.addEventListener("mousemove", timeF.animateSVG.moveLoupe.onMouseMove);
-                                    window.addEventListener("click", timeF.animateSVG.moveLoupe.onClick);
+                                    window.addEventListener("mousemove", this.onMouseMove);
+                                    window.addEventListener("click", this.onClick);
                                 },
 
                             onMouseMove: function(evt) {
-
+                                    // console.log(this.bmousedown)
                                     // If statements to turn off radio pointer
-                                    if((timeF.animateSVG.bmousedown == 1 || timeF.animateSVG.bmousedown == 3) && (timeF.animateSVG.moveLoupe.circleMove == true || timeF.animateSVG.moveLoupe.circleRotator == true)){
-                                    daRadio = document.querySelectorAll('.'+timeF.animateSVG.moveLoupe.currentID+'.daR')
+                                    if((this.bmousedown == 1 || this.bmousedown == 3) && (this.circleMove == true || this.circleRotator == true)){
+                                    var daRadio = document.querySelectorAll('.'+this.currentID+'.daR')
                                             for (i=0;i < daRadio.length; i++){
                                                 daRadio[i].style.pointerEvents  = "none";
                                             }}
                                     // If statements to turn off center pointer
-                                    if((timeF.animateSVG.bmousedown == 2 || timeF.animateSVG.bmousedown == 3) && (timeF.animateSVG.moveLoupe.circleRadio == true || timeF.animateSVG.moveLoupe.circleRotator == true)){
-                                    daRing = timeF.animateSVG.moveLoupe.ownerSVG.getElementsByClassName("iAni");
+                                    if((this.bmousedown == 2 || this.bmousedown == 3) && (this.circleRadio == true || this.circleRotator == true)){
+                                    var daRing = this.ownerSVG.getElementsByClassName("iAni");
                                         for (i=0;i < daRing.length; i++){
                                             daRing[i].style.pointerEvents  = "none";
                                         }  
                                     }
 
-                                    if(timeF.animateSVG.bmousedown != 3 && (timeF.animateSVG.moveLoupe.circleRadio == true || timeF.animateSVG.moveLoupe.circleMove == true)){
+                                    if(this.bmousedown != 3 && (this.circleRadio == true || this.circleMove == true)){
                                         document.querySelectorAll(".rotator").forEach(e=>e.style.pointerEvents  = "none")}
 
                                     if(evt.touches)
-                                    {timeF.animateSVG.newP = timeF.animateSVG.moveLoupe.getMouse(evt.touches[0])
-                                        if (timeF.animateSVG.moveLoupe.circleRotator == true){
-                                            var delta = (Math.PI - Math.atan2((timeF.animateSVG.newP.x - timeF.divDimension.xProp),(timeF.animateSVG.newP.y - timeF.divDimension.yProp))) - timeF.animateSVG.moveLoupe.pieRotInit
-                                            if (!isNaN(delta)) {timeF.animateSVG.moveLoupe.pieRotDelta =  delta}
+                                    {this.newP = timeF.getMouse(evt.touches[0])
+                                        if (this.circleRotator == true){
+                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
+                                            if (!isNaN(delta)) {this.pieRotDelta =  delta}
                                         }
-                                        timeF.animateSVG.moveLoupe.doUpdate(evt)
+                                        this.doUpdate(evt)
                                     }
-                                    else{timeF.animateSVG.newP = timeF.animateSVG.moveLoupe.getMouse(evt);
-                                        if (timeF.animateSVG.moveLoupe.circleRotator == true){
-                                            var delta = (Math.PI - Math.atan2((timeF.animateSVG.newP.x - timeF.divDimension.xProp),(timeF.animateSVG.newP.y - timeF.divDimension.yProp))) - timeF.animateSVG.moveLoupe.pieRotInit
-                                            if (!isNaN(delta)) {timeF.animateSVG.moveLoupe.pieRotDelta =  delta}
+                                    else{this.newP = timeF.getMouse(evt);
+                                        if (this.circleRotator == true){
+                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - timeF.divDimension.yProp))) - this.pieRotInit
+                                            if (!isNaN(delta)) {this.pieRotDelta =  delta}
                                             }
-                                        timeF.animateSVG.moveLoupe.doUpdate(evt)};
+                                            timeF.doUpdate(evt)};
                                     },
                                 
                             onMouseUp: function() {
-                                    if (timeF.animateSVG.moveLoupe.circleRotator == true)
-                                    {timeF.animateSVG.bmousedown=0;
-                                    timeF.animateSVG.moveLoupe.circleRotator = false;
-                                    timeF.makePies( timeF.animateSVG.moveLoupe.activePies.split(","),(timeF.animateSVG.moveLoupe.pieRot + timeF.animateSVG.moveLoupe.pieRotDelta))
-                                    daRadio = document.querySelectorAll('.'+timeF.animateSVG.moveLoupe.currentID+'.daR');
+                                    if (this.circleRotator == true)
+                                    {this.bmousedown=0;
+                                    this.circleRotator = false;
+                                    this.makePies( this.activePies.split(","),(this.pieRot + this.pieRotDelta))
+                                    var daRadio = document.querySelectorAll('.'+this.currentID+'.daR');
                                             for (i=0;i < daRadio.length; i++){
                                                 daRadio[i].style.pointerEvents  = "stroke";
                                             } 
-                                    if(timeF.leaflet == true){
-                                    for (i=0; i<timeF.leafMaps.length; i++) {
-                                        timeF.leafMaps[i].dragging.enable()
+                                    if(this.leaflet == true){
+                                    for (var i=0; i<this.leafMaps.length; i++) {
+                                        this.leafMaps[i].dragging.enable()
                                     }
                                     }}
                                     //If statements to activate the radio animation
-                                    if(timeF.animateSVG.bmousedown==2) {
-                                        if(daSVG.getAttribute('pies'))
-                                        {daSVG.getAttribute("pies").split('.').forEach(e=>timeF.animateSVG.radioAnimationOn('.'+e+'.daR.daAnim'))}
-                                        else{timeF.animateSVG.radioAnimationOn('.'+timeF.animateSVG.moveLoupe.currentID+'.daR.daAnim');}                                           
+                                    if(this.bmousedown==2) {
+                                        if(this.daSVG.getAttribute('pies'))
+                                        {this.daSVG.getAttribute("pies").split('.').forEach(e=>this.radioAnimationOn('.'+e+'.daR.daAnim'))}
+                                        else{this.radioAnimationOn('.'+this.currentID+'.daR.daAnim');}                                           
                                         //Enable leaflet dragging 
-                                        if(timeF.leaflet == true){
-                                        for (i=0; i<timeF.leafMaps.length; i++) {
-                                            timeF.leafMaps[i].dragging.enable()
+                                        if(this.leaflet == true){
+                                        for (var i=0; i<this.leafMaps.length; i++) {
+                                            this.leafMaps[i].dragging.enable()
                                         } 
                                     }}
                                     //Enable leaflet dragging
-                                    if(timeF.leaflet == true){
-                                    for (i=0; i<timeF.leafMaps.length; i++) {
-                                        timeF.leafMaps[i].dragging.enable()
+                                    if(this.leaflet == true){
+                                    for (i=0; i<this.leafMaps.length; i++) {
+                                        this.leafMaps[i].dragging.enable()
                                     }}
                                     // Start IF statment if working moving the center of the circle
-                                    if (timeF.animateSVG.moveLoupe.circleMove == true) {
-                                        daRadio = document.querySelectorAll('.'+timeF.animateSVG.moveLoupe.currentID+'.daR');
+                                    if (this.circleMove == true) {
+                                        var daRadio = document.querySelectorAll('.'+this.currentID+'.daR');
 
                                             for (i=0;i < daRadio.length; i++){
                                                 daRadio[i].style.pointerEvents  = "stroke";
                                             }    
-                                        timeF.animateSVG.bmousedown=0;
-                                        timeF.animateSVG.moveLoupe.circleMove=false;
-                                        daCenterSVG = document.querySelectorAll( '.'+timeF.animateSVG.moveLoupe.currentID+'.daCenterSVG')            
+                                        this.bmousedown=0;
+                                        this.circleMove=false;
+                                        daCenterSVG = document.querySelectorAll( '.'+this.currentID+'.daCenterSVG')            
                                         
                                         for (i=0;i < daCenterSVG.length; i++){
                                             daCenterSVG[i].style.opacity  = "0"
@@ -808,60 +775,60 @@ var timeF = { //time filters to manage tiles of different years
                                         }  
                                     } // End IF statement of moving center
                                     // Start IF statment if working with the Radio (ring)
-                                    if (timeF.animateSVG.moveLoupe.circleRadio == true){
-                                        timeF.animateSVG.bmousedown=0;
-                                        timeF.animateSVG.moveLoupe.circleRadio=false;
-                                        daRing = timeF.animateSVG.moveLoupe.ownerSVG.getElementsByClassName("iAni");
-                                        for (i=0;i < daRing.length; i++){
+                                    if (this.circleRadio == true){
+                                        this.bmousedown=0;
+                                        this.circleRadio=false;
+                                        var daRing = this.ownerSVG.getElementsByClassName("iAni");
+                                        for (var i=0;i < daRing.length; i++){
                                             daRing[i].style.pointerEvents  = "fill";
                                         }
-                                        daC = daSVG.getElementsByClassName("daC")
-                                        for (i=0; i<daC.length;i++){ //THERE HAS TO BE A BETTER WAY
-                                            timeF.animateSVG.moveLoupe.xCirculo = parseInt(daC[i].getAttribute("cx"))
-                                            timeF.animateSVG.moveLoupe.yCirculo = parseInt(daC[i].getAttribute("cy"))
+                                        daC = this.daSVG.getElementsByClassName("daC")
+                                        for (var i=0; i<daC.length;i++){ //THERE HAS TO BE A BETTER WAY
+                                            this.xCirculo = parseInt(daC[i].getAttribute("cx"))
+                                            this.yCirculo = parseInt(daC[i].getAttribute("cy"))
                                          }
                                     }  // End IF statement of radio     
                                 },       
                                 doUpdate: function (){  
                                     
-                                    daMap = timeF.animateSVG.moveLoupe.ownerDiv
-                                    daSVG = timeF.animateSVG.moveLoupe.ownerSVG
+                                    var daMap = this.ownerDiv
+                                    this.daSVG = this.ownerSVG
                                     //Start IF statement for rotator
-                                    if (timeF.animateSVG.moveLoupe.circleRotator == true)
+                                    if (this.circleRotator == true)
                                         {
-                                            if(isNaN(timeF.animateSVG.moveLoupe.pieRotDelta)) {timeF.animateSVG.moveLoupe.pieRotDelta = 0}
-                                            timeF.makePies( timeF.animateSVG.moveLoupe.activePies.split(","),(timeF.animateSVG.moveLoupe.pieRot + timeF.animateSVG.moveLoupe.pieRotDelta))
+                                            if(isNaN(this.pieRotDelta)) {this.pieRotDelta = 0}
+                                            this.makePies(this.activePies.split(","),(this.pieRot + this.pieRotDelta))
                                         }
                                     // Start IF statment if working with the Radio (ring)
-                                    if (timeF.animateSVG.moveLoupe.circleRadio == true) {
+                                    if (this.circleRadio == true) {
                                         
 
-                                        xD = Math.sqrt( Math.pow((timeF.animateSVG.newP.x - timeF.animateSVG.moveLoupe.offset.x - timeF.animateSVG.moveLoupe.xCirculo),2) + Math.pow((timeF.animateSVG.newP.y - timeF.animateSVG.moveLoupe.offset.y -timeF.animateSVG.moveLoupe.yCirculo),2))
+                                        xD = Math.sqrt( Math.pow((this.newP.x - this.offset.x - this.xCirculo),2) + Math.pow((this.newP.y - this.offset.y -this.yCirculo),2))
                                         if (xD > 0 ){ 
 
                                             rRadio = xD  
-                                            // timeF.divDimension.r = .  
-                                            daRadio = document.querySelectorAll('.'+timeF.animateSVG.moveLoupe.currentID+'.daR')
-                                                for (i=0; i<daRadio.length;i++){
+                                            // this.divDimension.r = .  
+                                            var daRadio = document.querySelectorAll('.'+this.currentID+'.daR')
+                                                for (var i=0; i<daRadio.length;i++){
                                               daRadio[i].setAttributeNS(null,'r',rRadio) 
                                                 }       
-                                            var daProp = daSVG.getBoundingClientRect().height/timeF.divDimension.height                 
-                                            daC = daSVG.getElementsByClassName("daC") //
-                                            for (i=0; i<daC.length;i++){
+                                            var daProp = this.daSVG.getBoundingClientRect().height/this.divDimension.height                 
+                                            var daC = this.daSVG.getElementsByClassName("daC") //
+                                            for (var i=0; i<daC.length;i++){
                                             daC[i].setAttributeNS(null,'r',rRadio * daProp);
                                             }                   
-                                            if (timeF.text == true){
-                                                daText = daSVG.getElementsByClassName('textC')
+                                            if (this.text == true){
+                                                var daText = this.daSVG.getElementsByClassName('textC')
                                                 for (i=0; i<daText.length;i++){
-                                                    ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
-                                                    daText[i].setAttributeNS(null,'y', ydis - timeF.divDimension.fontSize/2 - rRadio) 
+                                                    ydis = this.daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainer).getBoundingClientRect().y + this.daSVGbutton.getBoundingClientRect().height/2                                        
+                                                    daText[i].setAttributeNS(null,'y', ydis - this.divDimension.fontSize/2 - rRadio) 
                                             }
-                                                daText = daSVG.getElementsByClassName('text-above-circle')
+                                                var daText = this.daSVG.getElementsByClassName('text-above-circle')
                                                 for (i=0; i<daText.length;i++){
                                                         var xChange = 0
-                                                        // ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
+                                                        // ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
                                                         var prevRadio = parseFloat(daText[i].getAttribute('radio')) 
-                                                        var yChange = prevRadio-rRadio // parseFloat(daText[i].getAttribute('y')) - daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2  - timeF.divDimension.fontSize/2 - rRadio                                   
+                                                        var yChange = prevRadio-rRadio // parseFloat(daText[i].getAttribute('y')) - daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2  - this.divDimension.fontSize/2 - rRadio                                   
                                                         if (daText[i].getAttribute('transform') != null) {
                                                             var befTrans = daText[i].getAttribute('transform')
                                                             var befTransX = parseFloat(befTrans.split("(",)[1].split(" ")[0])
@@ -875,83 +842,88 @@ var timeF = { //time filters to manage tiles of different years
                                             }    
                                                 
                                             
-                                            if (daSVG.getAttribute('pies') != null){
-                                                var rotation = parseFloat(daSVG.getAttribute("rotation"))
-                                                timeF.makePies(daSVG.getAttribute('pies').split('.'),rotation)}
-                                             document.getElementById(timeF.divContainer).append(daMap)
-                                            //  timeF.animateSVG.newR = rRadio;
-                                             timeF.animateSVG.updatePosition()
+                                            if (this.daSVG.getAttribute('pies') != null){
+                                                var rotation = parseFloat(this.daSVG.getAttribute("rotation"))
+                                                this.makePies(this.daSVG.getAttribute('pies').split('.'),rotation)}
+                                             document.getElementById(this.divContainer).append(daMap)
+                                            //  this.newR = rRadio;
+                                             this.updatePosition()
             
                                         }
                                         
                                     } // End IF statement of radio size change 
                                     // Start IF statment if working moving the center of the circle
-                                    else if(timeF.animateSVG.moveLoupe.circleMove == true){
-                                        bboxX= -1*(timeF.animateSVG.newP.x- 
-                                            timeF.divDimension.xProp * timeF.divDimension.width
-                                            - timeF.animateSVG.moveLoupe.offset.x);// CHECK THE 250 math 
-                                        bboxY = -1*(timeF.animateSVG.newP.y- // bef -1 using bbox
-                                            timeF.divDimension.yProp * timeF.divDimension.height 
-                                            - timeF.animateSVG.moveLoupe.offset.y);
-                                        if (timeF.svgType == "vertical") {
+                                    else if(this.circleMove == true){
+                                        bboxX= -1*(this.newP.x- 
+                                            this.divDimension.xProp * this.divDimension.width
+                                            - this.offset.x);// CHECK THE 250 math 
+                                        bboxY = -1*(this.newP.y- // bef -1 using bbox
+                                            this.divDimension.yProp * this.divDimension.height 
+                                            - this.offset.y);
+                                        if (this.svgType == "vertical") {
                                             bboxY = 0
-                                            if (bboxX > timeF.divDimension.width/2) {bboxX = timeF.divDimension.width/2}    // change the 2 to a xProp value
-                                            if (bboxX < -1*timeF.divDimension.width/2) {bboxX = -1*timeF.divDimension.width/2}
+                                            if (bboxX > this.divDimension.width/2) {bboxX = this.divDimension.width/2}    // change the 2 to a xProp value
+                                            if (bboxX < -1*this.divDimension.width/2) {bboxX = -1*this.divDimension.width/2}
                                             }
-                                        if (timeF.svgType == "horizontal") {
+                                        if (this.svgType == "horizontal") {
                                             bboxX = 0
-                                            if (bboxY > timeF.divDimension.height/2) {bboxY = timeF.divDimension.height/2}    // change the 2 to a xProp value
-                                            if (bboxY < -1*timeF.divDimension.height/2) {bboxY = -1*timeF.divDimension.height/2}
+                                            if (bboxY > this.divDimension.height/2) {bboxY = this.divDimension.height/2}    // change the 2 to a xProp value
+                                            if (bboxY < -1*this.divDimension.height/2) {bboxY = -1*this.divDimension.height/2}
                                             
                                         }
-                                        newViewBox = bboxX + " " + bboxY + " " + timeF.divDimension.width + " " + timeF.divDimension.height;
-                                        daSVG.setAttributeNS(null, "viewBox", newViewBox)
-                                        var currentR = daSVG.getElementsByClassName("daR")[0].getAttribute("r")
-                                        daSVGbutton.parentElement.parentElement.setAttributeNS(null, "transform", 'translate(' +  -1*bboxX + ' ' +  -1*bboxY + ')')                                      
-                                        xdis = daSVGbutton.getBoundingClientRect().x - document.getElementById(timeF.divContainer).getBoundingClientRect().x + daSVGbutton.getBoundingClientRect().width/2
-                                        ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(timeF.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
-                                        var daC = daSVG.getElementsByClassName("daC")
-                                        if (timeF.svgType == "circle"){
+                                        newViewBox = bboxX + " " + bboxY + " " + this.divDimension.width + " " + this.divDimension.height;
+                                        this.daSVG.setAttributeNS(null, "viewBox", newViewBox)
+                                        var currentR = this.daSVG.getElementsByClassName("daR")[0].getAttribute("r")
+                                        this.daSVGbutton.parentElement.parentElement.setAttributeNS(null, "transform", 'translate(' +  -1*bboxX + ' ' +  -1*bboxY + ')')                                      
+                                        xdis = this.daSVGbutton.getBoundingClientRect().x - document.getElementById(this.divContainer).getBoundingClientRect().x + this.daSVGbutton.getBoundingClientRect().width/2
+                                        ydis = this.daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainer).getBoundingClientRect().y + this.daSVGbutton.getBoundingClientRect().height/2                                        
+                                        var daC = this.daSVG.getElementsByClassName("daC")
+                                        if (this.svgType == "circle"){
                                         for (i=0; i<daC.length;i++){
                                             daC[i].setAttributeNS(null,'cx',xdis)
                                             daC[i].setAttributeNS(null,'cy',ydis) 
                                             
-                                            if (daSVG.getAttribute('pies') != null){
-                                                var rotation = parseFloat(daSVG.getAttribute("rotation"))
-                                                timeF.makePies(daSVG.getAttribute('pies').split('.'),rotation)}
+                                            if (this.daSVG.getAttribute('pies') != null){
+                                                var rotation = parseFloat(this.daSVG.getAttribute("rotation"))
+                                                this.makePies(this.daSVG.getAttribute('pies').split('.'),rotation)}
                                             }
-                                            if (timeF.text == true){
-                                                daText = daSVG.getElementsByClassName('textC')
+                                            if (this.text == true){
+                                                daText = this.daSVG.getElementsByClassName('textC')
                                                 for (i=0; i<daText.length;i++){
                                                     daText[i].setAttributeNS(null,'x',xdis)
-                                                    daText[i].setAttributeNS(null,'y',ydis - timeF.divDimension.fontSize/2 - currentR) 
+                                                    daText[i].setAttributeNS(null,'y',ydis - this.divDimension.fontSize/2 - currentR) 
                                             }};
                                         }
 
-                                        if (timeF.svgType == "vertical" && xdis > 0){ 
+                                        if (this.svgType == "vertical" && xdis > 0){ 
                                             for (i=0; i<daC.length;i++){
                                                 daC[i].setAttributeNS(null,'x',xdis)
                                                 }
                                         }
-                                        if (timeF.svgType == "horizontal" && ydis > 0){ // ydis might be usefull to make the moving windows
+                                        if (this.svgType == "horizontal" && ydis > 0){ // ydis might be usefull to make the moving windows
                                             for (i=0; i<daC.length;i++){
                                                 daC[i].setAttributeNS(null,'y',ydis)
                                                 }
                                         }
-                                        timeF.animateSVG.updatePosition()
-                                        timeF.animateSVG.calculateDistance()
-                                        document.getElementById(timeF.divContainer).append(daMap)                                    
+                                        this.updatePosition()
+                                        this.calculateDistance()
+                                        document.getElementById(this.divContainer).append(daMap)                                    
                                     } // End IF statmenet if moving the center of the circle
+                                    
                                 },
-                                                    }, // End of moveLoupe object                      
-                }, //End of animSVG object
+                                onClick: function(){
+                                    timeF.onMouseUp()
+                                },
+
+                                                    // }, // End of moveLoupe object                      
+                // }, //End of animSVG object
  resize: function(){
     this.calcDivDimensions()
     var xUpdate = (window.innerWidth - this.windowDimension.wX)/2;
     var yUpdate = (window.innerHeight - this.windowDimension.wY)/2;
-    timeF.updateMasks(xUpdate,yUpdate)
-    timeF.windowDimension.wY = window.innerHeight
-    timeF.windowDimension.wX = window.innerWidth
+    this.updateMasks(xUpdate,yUpdate)
+    this.windowDimension.wY = window.innerHeight
+    this.windowDimension.wX = window.innerWidth
     var vBoriginalX = document.getElementById(this.svgParentName).viewBox.baseVal.x
     var vBoriginalY = document.getElementById(this.svgParentName).viewBox.baseVal.y
     document.getElementById(this.svgParentName).setAttributeNS(null,'viewBox',vBoriginalX + " " + vBoriginalY + " "+window.innerWidth+" "+window.innerHeight)
@@ -962,7 +934,7 @@ var timeF = { //time filters to manage tiles of different years
           +e.viewBox.baseVal.y
           +" "+window.innerWidth+" "+window.innerHeight))
   if(this.pieArray.length > 0){
-    this.pieArray.forEach(e=>timeF.makePies(e.divArray,e.iRad))}// timeF.start('daMap',tileArray,'circle',)}
+    this.pieArray.forEach(e=>this.makePies(e.divArray,e.iRad))}// 
   },
   listenResize: function(){  
     window.addEventListener("resize", function() {timeF.resize()})
