@@ -14,6 +14,7 @@ var timeF = { //time filters to manage tiles of different years
         this.makeSVG()
         this.listenResize()
     },
+    objName: 'timeF',
     divContainer: "daMap",
     svgParentName: "svgParent",
     counter:0,
@@ -159,19 +160,19 @@ var timeF = { //time filters to manage tiles of different years
                         
                         if (this.svgType == "circle" ) {
                             svgStrokeTouch = '<circle id=\"daRadio_' + daID + '\" class=\"' + daID + ' daRadio daR radio-touch-event\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
-                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
+                                        + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></circle></g>' 
                         }
 
                         if (this.svgType == "vertical") {
                             svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * xProp)+ '\" y1=\"' + (this.divDimension.height * 0) + '\" x2=\"' + (this.divDimension.width * xProp) + '\" y2=\"' + (this.divDimension.height) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ew-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
-                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
+                                        + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></line></g>' 
                         } 
 
                         if (this.svgType == "horizontal") {
                             svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * 0)+ '\" y1=\"' + (this.divDimension.height * yProp) + '\" x2=\"' + (this.divDimension.width) + '\" y2=\"' + (this.divDimension.height * yProp) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ns-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
-                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
+                                        + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></line></g>' 
                         } 
                         // Apply arrows depending on selection 
@@ -182,7 +183,7 @@ var timeF = { //time filters to manage tiles of different years
                         
 
                         var svgButtons = '<g id=\"gUp' + daID + '\"class=\"upB\"><g  class=\"' + daID + ' daCenterSVG\"' +
-                        'stroke=\"none\" stroke-width=\"4\" style=\"pointer-events: fill; position: absolute; cursor: move;\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\">'+
+                        'stroke=\"none\" stroke-width=\"4\" style=\"pointer-events: fill; position: absolute; cursor: move;\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\">'+
                                             
                                         '<circle id=\"_' + daID + '\" class=\"' + daID + ' iAni daArrowCircle\"' +
                                         'xprop=\"' + xProp + '\"' + 'yprop=\"' + yProp + '\"' +
@@ -428,9 +429,10 @@ var timeF = { //time filters to manage tiles of different years
                                         + 'lpie=\"'  + divArray.toString() + '"\ '
                                         + 'pierot=\"'  + iInputAngle + '\" '
                                         + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%;  pointer-events: fill;' 
-                                        + '\" onmousedown=\"timeF.onMouseDown(evt)\" onmousemove=\"timeF.onMouseMove(evt)\" onmouseup=\"timeF.onMouseUp(evt)\" ontouchstart=\"timeF.onMouseDown(evt)\" ontouchmove=\"timeF.onMouseMove(evt)\" ontouchend=\"timeF.onMouseUp(evt)\" ontouchcancel=\"timeF.onMouseUp(evt)\"' 
+                                        + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + ' ></circle>' + daTextPath
-            circle.innerHTML = daInnerHTML
+                // console.log(daInnerHTML)
+                circle.innerHTML = daInnerHTML
 
         document.getElementById(this.svgParentName).appendChild(circle)                   
         // annoying Safari
@@ -449,7 +451,7 @@ var timeF = { //time filters to manage tiles of different years
         },
     svgPiesObjs:[],
     svgPiesArray: [],
-    setActiveSVG: function(){for(i=0; i<this.divNames.length;i++){
+    setActiveSVG: function(){for(var i=0; i<this.divNames.length;i++){
         if(this.currentID == this.divNames[i]){this.activeSVG = i};};
     },
     updatePosition: function(){
@@ -519,7 +521,8 @@ var timeF = { //time filters to manage tiles of different years
                                                                                 var rotation = parseFloat(this.daSVG.getAttribute("rotation"))
                                                                                 this.makePies(divArray, rotation);
                                                                                 return false}
-                                                                        this.makePies(divArray)}
+                                                                        this.makePies(divArray);// console.log('made first pie')
+                                                                    }
                                             };
                                             if (this.positionArray[i].id === this.currentID) {isInside = -1}
                                             this.insideArray.push(isInside)
@@ -527,7 +530,7 @@ var timeF = { //time filters to manage tiles of different years
                                         },
                  
                     addListerners: function(){
-                        window.addEventListener("mouseup", timeF.onMouseUp);
+                        document.getElementById('daMap').addEventListener("mouseup", this.daMouseUp);
                     },
                     radioAnimationOn: function(classQuery) {
                         daAnim = document.querySelectorAll(classQuery)
@@ -584,6 +587,7 @@ var timeF = { //time filters to manage tiles of different years
                    
                         onMouseDown: function(evt){
                                 // Loop to dissable the Leaflet dragging // change to an arrow forEach function 
+                                
                                 if(this.leaflet == true){
                                 for (var i=0; i<this.leafMaps.length; i++) {
                                     this.leafMaps[i].dragging.disable()
@@ -601,8 +605,9 @@ var timeF = { //time filters to manage tiles of different years
                                     
                                     //If statement has pie rotator
                                     if (evt.target.getElementsByClassName("rotator")){
-                                    this.activePies = daCircle.getAttribute('lpie')
-                                    this.pieRot = parseFloat(daCircle.getAttribute('pierot'))}
+                                    this.activePies = daCircle.getAttribute('lpie') // off
+                                    this.pieRot = parseFloat(daCircle.getAttribute('pierot'))
+                                    }
                                     this.ownerSVG = this.daSVG;
                                     
                                     if (this.leaflet == true){this.ownerDiv = this.ownerSVG.parentElement.parentElement;}
@@ -673,7 +678,7 @@ var timeF = { //time filters to manage tiles of different years
                                     
                                     // If statement for touch events // I should do more research on this but it worked at least for cellphones
                                     if (evt.touches){
-                                            this.newP=this.getMouse(evt.touches[0]) // check if this this is a problem 
+                                            this.newP=this.getMouse(evt.touches[0]) // check if this this is a problem using cellphone
                                             if (this.circleRotator == true)
                                             {this.pieRotInit = Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))
                                             }
@@ -688,8 +693,8 @@ var timeF = { //time filters to manage tiles of different years
                                             this.doUpdate(evt);
                                         }
                                     
-                                    window.addEventListener("mousemove", this.onMouseMove);
-                                    window.addEventListener("click", this.onClick);
+                                        document.getElementById('daMap').addEventListener("mousemove", this.onMouseMove);
+                                    document.getElementById('daMap').addEventListener("click", this.daMouseUp);
                                 },
 
                             onMouseMove: function(evt) {
@@ -712,26 +717,32 @@ var timeF = { //time filters to manage tiles of different years
                                         document.querySelectorAll(".rotator").forEach(e=>e.style.pointerEvents  = "none")}
 
                                     if(evt.touches)
-                                    {this.newP = timeF.getMouse(evt.touches[0])
+                                    {this.newP = this.getMouse(evt.touches[0]) // might be needed check cellphone
                                         if (this.circleRotator == true){
                                             var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
                                             if (!isNaN(delta)) {this.pieRotDelta =  delta}
                                         }
-                                        this.doUpdate(evt)
+                                        this.doUpdate()
                                     }
-                                    else{this.newP = timeF.getMouse(evt);
+                                    else{
+                                        // console.log(this.newP)
+                                        if (this.objName === 'timeF')
+                                        {  
+                                            this.newP = this.getMouse(evt);// needed
                                         if (this.circleRotator == true){
-                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - timeF.divDimension.yProp))) - this.pieRotInit
+                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
                                             if (!isNaN(delta)) {this.pieRotDelta =  delta}
                                             }
-                                            timeF.doUpdate(evt)};
-                                    },
+                                            this.doUpdate()};// change
+                                    }
+                                },
                                 
-                            onMouseUp: function() {
+                            daMouseUp: function() {
                                     if (this.circleRotator == true)
                                     {this.bmousedown=0;
                                     this.circleRotator = false;
-                                    this.makePies( this.activePies.split(","),(this.pieRot + this.pieRotDelta))
+                                    if(this.activePies != null){
+                                    this.makePies( this.activePies.split(","),(this.pieRot + this.pieRotDelta))}
                                     var daRadio = document.querySelectorAll('.'+this.currentID+'.daR');
                                             for (i=0;i < daRadio.length; i++){
                                                 daRadio[i].style.pointerEvents  = "stroke";
@@ -797,7 +808,8 @@ var timeF = { //time filters to manage tiles of different years
                                     if (this.circleRotator == true)
                                         {
                                             if(isNaN(this.pieRotDelta)) {this.pieRotDelta = 0}
-                                            this.makePies(this.activePies.split(","),(this.pieRot + this.pieRotDelta))
+                                            if(this.activePies != null){
+                                            this.makePies(this.activePies.split(","),(this.pieRot + this.pieRotDelta))}
                                         }
                                     // Start IF statment if working with the Radio (ring)
                                     if (this.circleRadio == true) {
@@ -911,9 +923,10 @@ var timeF = { //time filters to manage tiles of different years
                                     } // End IF statmenet if moving the center of the circle
                                     
                                 },
-                                onClick: function(){
-                                    timeF.onMouseUp()
-                                },
+                                // daClick: function(){
+                                //     console.log(this)
+                                //     this.daMouseUp() //propbably needed
+                                // },
 
                                                     // }, // End of moveLoupe object                      
                 // }, //End of animSVG object
@@ -937,7 +950,8 @@ var timeF = { //time filters to manage tiles of different years
     this.pieArray.forEach(e=>this.makePies(e.divArray,e.iRad))}// 
   },
   listenResize: function(){  
-    window.addEventListener("resize", function() {timeF.resize()})
-    window.addEventListener("orientationchange", function() {timeF.resize()})
+    const _this = this
+    window.addEventListener("resize", function() {_this.resize()})
+    window.addEventListener("orientationchange", function() {_this.resize()})
 }
 } // end of Time Filter Object
