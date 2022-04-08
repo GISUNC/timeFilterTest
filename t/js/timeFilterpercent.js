@@ -530,7 +530,7 @@ var timeF = { //time filters to manage tiles of different years
                                         },
                  
                     addListerners: function(){
-                        document.getElementById('daMap').addEventListener("mouseup", this.daMouseUp);
+                        document.getElementById(this.divContainer).addEventListener("mouseup", this.daMouseUp);
                     },
                     radioAnimationOn: function(classQuery) {
                         daAnim = document.querySelectorAll(classQuery)
@@ -693,8 +693,8 @@ var timeF = { //time filters to manage tiles of different years
                                             this.doUpdate(evt);
                                         }
                                     
-                                        document.getElementById('daMap').addEventListener("mousemove", this.onMouseMove);
-                                    document.getElementById('daMap').addEventListener("click", this.daMouseUp);
+                                        document.getElementById(this.divContainer).addEventListener("mousemove", this.onMouseMove);
+                                    document.getElementById(this.divContainer).addEventListener("click", this.daMouseUp);
                                 },
 
                             onMouseMove: function(evt) {
