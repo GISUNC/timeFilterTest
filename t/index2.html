@@ -22,8 +22,8 @@
     }
 
     div {
-        width: 100%;
-        height:100%;
+        width: 300px;
+        height:300px;
         padding-left: 0;
         margin: 0px;
         border-collapse: collapse;
@@ -45,16 +45,17 @@
 
 <body>
 
-    <div id="daMap">
+    <div id="daMap"></div>
+    <div id="daMap2"></div>
 
-</div>
+
 <script>
     const timeF = TF('timeF')
     // const timeF = TF
     timeF.divNames = ['Y20','Y09', 'Y83','Y77', 'Y37']//['Y1937','Y1977','Y1983',,'Y2020']
     timeF.filterNames = ['Year 2020','Year 2009', 'Year 1983','Year 1977', 'Year 1937']//['Y1937','Y1977','Y1983',,'Y2020']
 
-    var tileArray =
+    tileArray =
 [   
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     'https://cartocollective.blob.core.windows.net/vieques/v2009/{z}/{x}/{y}.png',
@@ -64,14 +65,26 @@
 ]
 timeF.zoom = 17;
 timeF.center = [18.144475406614973, -65.30060941442248,];
-
-// timeF.assignNamesToDiv()
-// timeF.startLeafDiv()
-// timeF.joinAllLeafDiv()
-// timeF.makeSVG()
-// timeF.assignFilters()
-
 timeF.start('daMap',tileArray,'circle',)
+
+const timeF2 = TF('timeF2')
+    // const timeF = TF
+    timeF2.filterNames = ['Year 2020','Year 2009', 'Year 1983','Year 1977', 'Year 1937']//['Y1937','Y1977','Y1983',,'Y2020']
+
+    var tileArray =
+[   
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    'https://cartocollective.blob.core.windows.net/vieques/v2009/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1983/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1977/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1937/{z}/{x}/{y}.png'
+]
+timeF2.zoom = 17;
+timeF2.center = [18.144475406614973, -65.30060941442248,];
+timeF2.divNames = ['Y20b','Y09b', 'Y83b','Y77b', 'Y37b']//['Y1937','Y1977','Y1983',,'Y2020']
+timeF2.start('daMap2',tileArray,'circle',)
+
+
 
 // function listAllEventListeners() {
 //   const allElements = Array.prototype.slice.call(document.querySelectorAll('*'));

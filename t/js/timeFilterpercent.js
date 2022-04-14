@@ -2,7 +2,7 @@
 // change the method for creating the pieArrays
 // remove text-above-circle when creating pie. 
 // replace the name leafTiles to imgTiles
-var timeF = { //time filters to manage tiles of different years
+function TF (objName){ return { //time filters to manage tiles of different years
     start: function(containerDIV,tileArray,svgType, options) {
         this.divContainer = containerDIV;
         this.leafTiles = tileArray;
@@ -12,9 +12,10 @@ var timeF = { //time filters to manage tiles of different years
         if (this.leaflet == false) {this.assingImgToDivs(tileArray)}
         if (svgType == null) {this.svgType = "circle" } else {this.svgType = svgType};
         this.makeSVG()
+        this.addListerners()
         this.listenResize()
     },
-    objName: 'timeF',
+    objName: objName,//'timeF',
     divContainer: "daMap",
     svgParentName: "svgParent",
     counter:0,
@@ -73,9 +74,9 @@ var timeF = { //time filters to manage tiles of different years
                                 if (this.contDiv == null) {return console.log("no div whith that ID")} } else { this.contDivAssigned = true}
                             this.divNamesFunction()
                             if (this.namesInDiv == true) {return true}
-                            for (i = 0; i < this.divNames.length; i++)
+                            for (var i = 0; i < this.divNames.length; i++)
                             {
-                                iDiv = document.createElement('div');
+                                var iDiv = document.createElement('div');
                                 iDiv.setAttributeNS(null, 'id', this.divNames[i]);
                                 iDiv.setAttributeNS(null, 'class', this.classType);
                                 this.contDiv.appendChild(iDiv)
@@ -159,19 +160,22 @@ var timeF = { //time filters to manage tiles of different years
                         var svgStrokeTouch = '';
                         
                         if (this.svgType == "circle" ) {
-                            svgStrokeTouch = '<circle id=\"daRadio_' + daID + '\" class=\"' + daID + ' daRadio daR radio-touch-event\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
+                            svgStrokeTouch = '<circle id=\"daRadio_' + daID + '\" class=\"' + daID + ' daRadio daR radio-touch-event\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r 
+                                        + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
                                         + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></circle></g>' 
                         }
 
                         if (this.svgType == "vertical") {
-                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * xProp)+ '\" y1=\"' + (this.divDimension.height * 0) + '\" x2=\"' + (this.divDimension.width * xProp) + '\" y2=\"' + (this.divDimension.height) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ew-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
+                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * xProp)+ '\" y1=\"' + (this.divDimension.height * 0) + '\" x2=\"' + (this.divDimension.width * xProp) + '\" y2=\"' + (this.divDimension.height) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' 
+                                        + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ew-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
                                         + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></line></g>' 
                         } 
 
                         if (this.svgType == "horizontal") {
-                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * 0)+ '\" y1=\"' + (this.divDimension.height * yProp) + '\" x2=\"' + (this.divDimension.width) + '\" y2=\"' + (this.divDimension.height * yProp) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ns-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
+                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + '  iAni verticalLine\" x1=\"' + (this.divDimension.width * 0)+ '\" y1=\"' + (this.divDimension.height * yProp) + '\" x2=\"' + (this.divDimension.width) + '\" y2=\"' + (this.divDimension.height * yProp) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' 
+                                        + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ns-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
                                         + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></line></g>' 
                         } 
@@ -183,9 +187,10 @@ var timeF = { //time filters to manage tiles of different years
                         
 
                         var svgButtons = '<g id=\"gUp' + daID + '\"class=\"upB\"><g  class=\"' + daID + ' daCenterSVG\"' +
-                        'stroke=\"none\" stroke-width=\"4\" style=\"pointer-events: fill; position: absolute; cursor: move;\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\">'+
-                                            
-                                        '<circle id=\"_' + daID + '\" class=\"' + daID + ' iAni daArrowCircle\"' +
+                        'stroke=\"none\" stroke-width=\"4\" ' 
+                        + 'style=\"pointer-events: fill; position: absolute; cursor: move;\" ' 
+                        + 'onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"'     
+                                       + '><circle id=\"_' + daID + '\" class=\"' + daID + ' iAni daArrowCircle\"' +
                                         'xprop=\"' + xProp + '\"' + 'yprop=\"' + yProp + '\"' +
                                         'cx= \"' + (this.divDimension.width * xProp) +
                                         '\" cy= \"' + (this.divDimension.height * yProp) +
@@ -530,7 +535,11 @@ var timeF = { //time filters to manage tiles of different years
                                         },
                  
                     addListerners: function(){
-                        document.getElementById(this.divContainer).addEventListener("mouseup", this.daMouseUp);
+                        // document.getElementById(this.divContainer).addEventListener("mouseup", this.daMouseUp);
+                        var _this = this
+                        window.addEventListener("mouseup", function(evt) {_this.daMouseUp(evt)});
+                        window.addEventListener("mousemove", function(evt) {_this.onMouseMove(evt)});
+                        window.addEventListener("click", function(evt) {_this.daMouseUp(evt)}); 
                     },
                     radioAnimationOn: function(classQuery) {
                         daAnim = document.querySelectorAll(classQuery)
@@ -583,11 +592,10 @@ var timeF = { //time filters to manage tiles of different years
                                     return this.position
                                     },
                         daSVGbutton:undefined,
-                        daSVG:undefined,
-                   
+                        daSVG:undefined,      
                         onMouseDown: function(evt){
-                                // Loop to dissable the Leaflet dragging // change to an arrow forEach function 
                                 
+                                // Loop to dissable the Leaflet dragging // change to an arrow forEach function 
                                 if(this.leaflet == true){
                                 for (var i=0; i<this.leafMaps.length; i++) {
                                     this.leafMaps[i].dragging.disable()
@@ -692,16 +700,20 @@ var timeF = { //time filters to manage tiles of different years
                                            
                                             this.doUpdate(evt);
                                         }
-                                    
-                                        document.getElementById(this.divContainer).addEventListener("mousemove", this.onMouseMove);
-                                    document.getElementById(this.divContainer).addEventListener("click", this.daMouseUp);
+                                    //     var _this = this
+                                    // window.addEventListener("mousemove", _this.onMouseMove);
+                                    // window.addEventListener("click", _this.daMouseUp);                                 
+                                    // document.getElementById(this.divContainer).addEventListener("mousemove", this.onMouseMove);
+                                    // document.getElementById(this.divContainer).addEventListener("click", this.daMouseUp);
                                 },
 
                             onMouseMove: function(evt) {
-                                    // console.log(this.bmousedown)
+
+                                // return}
+                                    // console.log("bmouse = " + this.bmousedown)
                                     // If statements to turn off radio pointer
                                     if((this.bmousedown == 1 || this.bmousedown == 3) && (this.circleMove == true || this.circleRotator == true)){
-                                    var daRadio = document.querySelectorAll('.'+this.currentID+'.daR')
+                                        var daRadio = document.querySelectorAll('.'+this.currentID+'.daR')
                                             for (i=0;i < daRadio.length; i++){
                                                 daRadio[i].style.pointerEvents  = "none";
                                             }}
@@ -726,20 +738,22 @@ var timeF = { //time filters to manage tiles of different years
                                     }
                                     else{
                                         // console.log(this.newP)
-                                        if (this.objName === 'timeF')
-                                        {  
+                                        // if (this.objName === 'timeF')
+                                        // {  
                                             this.newP = this.getMouse(evt);// needed
                                         if (this.circleRotator == true){
                                             var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
                                             if (!isNaN(delta)) {this.pieRotDelta =  delta}
                                             }
                                             this.doUpdate()};// change
-                                    }
+                                    // }
                                 },
                                 
                             daMouseUp: function() {
+                                    if(this.bmousedown == undefined){console.log(this)}
+
                                     if (this.circleRotator == true)
-                                    {this.bmousedown=0;
+                                    {  this.bmousedown=0;
                                     this.circleRotator = false;
                                     if(this.activePies != null){
                                     this.makePies( this.activePies.split(","),(this.pieRot + this.pieRotDelta))}
@@ -954,4 +968,5 @@ var timeF = { //time filters to manage tiles of different years
     window.addEventListener("resize", function() {_this.resize()})
     window.addEventListener("orientationchange", function() {_this.resize()})
 }
-} // end of Time Filter Object
+} // end of Time Filter Object 
+}// end of function 
