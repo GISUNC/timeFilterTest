@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loupe Object</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <link rel="stylesheet" href="./css/timeFilter.css"/>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+</head>
+<style>
+    body {
+        background-color: gray;
+        margin: 0px;
+
+    }
+
+    div {
+        width: 300px;
+        height:300px;
+        padding-left: 0;
+        margin: 0px;
+        border-collapse: collapse;
+        }
+
+    .testClass {
+        position: absolute;
+         background-color: burlywood;
+         padding-left: 0;
+         margin: 0px;
+         border-collapse: collapse;
+
+
+    }
+</style>
+
+<script src ="./js/L.Map.Sync-min.js"></script>
+<script src="./js/timeFilterpercentClass.js"></script>
+
+<body>
+
+    <div id="daMap"></div>
+    <div id="daMap2"></div>
+
+
+<script>
+    const timeF3 = TF()
+    // const timeF = TF
+    timeF3.divNames = ['Y20','Y09', 'Y83','Y77', 'Y37']//['Y1937','Y1977','Y1983',,'Y2020']
+    timeF3.filterNames = ['Year 2020','Year 2009', 'Year 1983','Year 1977', 'Year 1937']//['Y1937','Y1977','Y1983',,'Y2020']
+
+    tileArray =
+[   
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    'https://cartocollective.blob.core.windows.net/vieques/v2009/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1983/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1977/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1937/{z}/{x}/{y}.png'
+]
+timeF3.zoom = 17;
+timeF3.center = [18.144475406614973, -65.30060941442248,];
+timeF3.start('daMap',tileArray,'circle',)
+
+const timeF2 = TF(  )
+    // const timeF = TF
+    timeF2.filterNames = ['Year 2020','Year 2009', 'Year 1983','Year 1977', 'Year 1937']//['Y1937','Y1977','Y1983',,'Y2020']
+
+    var tileArray =
+[   
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    'https://cartocollective.blob.core.windows.net/vieques/v2009/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1983/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1977/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/vieques/v1937/{z}/{x}/{y}.png'
+]
+timeF2.zoom = 17;
+timeF2.center = [18.144475406614973, -65.30060941442248,];
+timeF2.divNames = ['Y20b','Y09b', 'Y83b','Y77b', 'Y37b']//['Y1937','Y1977','Y1983',,'Y2020']
+timeF2.start('daMap2',tileArray,'circle',)
+
+
+
+// function listAllEventListeners() {
+//   const allElements = Array.prototype.slice.call(document.querySelectorAll('*'));
+//   allElements.push(document);
+//   allElements.push(window);
+
+//   const types = [];
+
+//   for (let ev in window) {
+//     if (/^on/.test(ev)) types[types.length] = ev;
+//   }
+
+//   let elements = [];
+//   for (let i = 0; i < allElements.length; i++) {
+//     const currentElement = allElements[i];
+//     for (let j = 0; j < types.length; j++) {
+//       if (typeof currentElement[types[j]] === 'function') {
+//         elements.push({
+//           "node": currentElement,
+//           "type": types[j],
+//           "func": currentElement[types[j]].toString(),
+//         });
+//       }
+//     }
+//   }
+
+//   return elements.sort(function(a,b) {
+//     return a.type.localeCompare(b.type);
+//   });
+// }
+
+// console.table(listAllEventListeners())
+
+</script>
+</body>
+</html>

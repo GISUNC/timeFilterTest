@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drag and drop</title>
+    <style>
+        #image_drop_area{
+            width: 300px;
+            height: 169px;
+            border: 1px solid black;
+            background-position: center;
+            background-size: cover; 
+            box-sizing: border-box;
+            position: absolute;
+            }
+            #button{
+                top: 230px;
+                width: 300px;
+                height: 100px;
+                position: absolute;
+                background-color: aquamarine;
+            }
+         img {
+            width: 300px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+  <!-- Sacado de https://codepen.io/codefoxx/pen/rNmGMbB -->
+        <p>Drag and drop an image into the box</p>
+        <div id="image_drop_area"></div>
+        <div id="button"></div>
+        <p id="file_name"></p>
+        <script src="./js/dragdropscript.js"></script>
+    
+    
+</body>
+</html>

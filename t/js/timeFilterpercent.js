@@ -15,6 +15,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
         this.addListerners()
         this.listenResize()
     },
+    getObjName: function() {var _this = this; console.log(_this.name)},  
     objName: objName,//'timeF',
     divContainer: "daMap",
     svgParentName: "svgParent",
@@ -274,6 +275,18 @@ function TF (objName){ return { //time filters to manage tiles of different year
                             }
                             this.updatePosition()
                         },
+    listenSVG:function(){   // THIS method does not work
+                            var _this = this
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('click',function(evt){alert(evt)}))
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('onmousedown',function(evt){_this.onMouseDown(evt)}))
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('onmousemove',function(evt){_this.onMouseMove(evt)}))
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('onmouseup',function(evt){_this.daMouseUp(evt)}))
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchstart',function(evt){_this.onMouseDown(evt)}))
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchmove',function(evt){_this.onMouseMove(evt)}))
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchend',function(evt){_this.daMouseUp(evt)}))
+                            document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchcancel',function(evt){_this.daMouseUp(evt)}))
+                            
+    },
 
     filterArray:["none","sepia(25%)","sepia(50%)","sepia(75%)"],//,"sepia(100%)"],
     assignFilters: function(filterArray){
@@ -444,7 +457,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
         daSVGmerge.parentNode.appendChild(daSVGmerge).appendChild(daMask);
       
         if (i > 0){
-        daRadioStrokei = document.getElementById("daRadioStroke_" + divArray[i])
+        var daRadioStrokei =  document.getElementById("daRadioStroke_" + divArray[i])
         daSVGmerge.setAttributeNS(null,"viewBox",viewBox0)
         daRadioStrokei.setAttributeNS(null,"cx",daRadioCX)
         daRadioStrokei.setAttributeNS(null,"cy",daRadioCY)
@@ -542,7 +555,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                         window.addEventListener("click", function(evt) {_this.daMouseUp(evt)}); 
                     },
                     radioAnimationOn: function(classQuery) {
-                        daAnim = document.querySelectorAll(classQuery)
+                        var daAnim = document.querySelectorAll(classQuery)
                         for (var i = 0; i < daAnim.length; i++) {
                           daAnim[i].style.strokeWidth= "1%";
                           daAnim[i].style.animation = "dash .4s linear"
@@ -552,7 +565,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                               } 
                     },
                     radioAnimationOff: function(classQuery){
-                        daAnim = document.querySelectorAll(classQuery)
+                        var daAnim = document.querySelectorAll(classQuery)
                             for (i = 0; i < daAnim.length; i++) {
                               daAnim[i].style.strokeWidth= "1%";
                               daAnim[i].style.animation = "none"; 
@@ -569,7 +582,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                     }
                         },
                     radioStrikeOn: function(classQuery) {
-                        daAnim = document.querySelectorAll(classQuery);
+                        var daAnim = document.querySelectorAll(classQuery);
                             for (i = 0; i < daAnim.length; i++) {
                               daAnim[i].style.strokeWidth= "6%";
                               daAnim[i].style.animation = "none"; 
@@ -638,7 +651,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                         for (i=0;i < daRadio.length; i++){
                                             daRadio[i].style.pointerEvents  = "none";
                                         }
-                                        daRing = this.ownerSVG.getElementsByClassName("iAni");
+                                        var daRing = this.ownerSVG.getElementsByClassName("iAni");
                                         for (i=0;i < daRing.length; i++){
                                             daRing[i].style.pointerEvents  = "none";
                                         }    
@@ -655,7 +668,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                         else{this.radioStrikeOn('.'+this.currentID+'.daR.daAnim')}                                                
                                         
 
-                                        daRing = this.ownerSVG.getElementsByClassName("iAni");
+                                        var daRing = this.ownerSVG.getElementsByClassName("iAni");
                                         for (i=0;i < daRing.length; i++){
                                             daRing[i].style.pointerEvents  = "none";
                                         }    
@@ -669,7 +682,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                         if(this.daSVG.getAttribute('pies'))
                                         {this.daSVG.getAttribute("pies").split('.').forEach(e=>this.radioAnimationOff('.'+e+'.daR.daAnim'))}
                                         else{this.radioAnimationOff('.'+this.currentID+'.daR.daAnim');}   
-                                        daCenterSVG = document.querySelectorAll( '.'+this.currentID+'.daCenterSVG')            
+                                        var daCenterSVG = document.querySelectorAll( '.'+this.currentID+'.daCenterSVG')            
                                         
                                         for (i=0;i < daCenterSVG.length; i++){
                                             daCenterSVG[i].style.animation  = "none"
@@ -791,7 +804,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                             }    
                                         this.bmousedown=0;
                                         this.circleMove=false;
-                                        daCenterSVG = document.querySelectorAll( '.'+this.currentID+'.daCenterSVG')            
+                                        var daCenterSVG =  document.querySelectorAll( '.'+this.currentID+'.daCenterSVG')            
                                         
                                         for (i=0;i < daCenterSVG.length; i++){
                                             daCenterSVG[i].style.opacity  = "0"
@@ -807,7 +820,7 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                         for (var i=0;i < daRing.length; i++){
                                             daRing[i].style.pointerEvents  = "fill";
                                         }
-                                        daC = this.daSVG.getElementsByClassName("daC")
+                                        var daC = this.daSVG.getElementsByClassName("daC")
                                         for (var i=0; i<daC.length;i++){ //THERE HAS TO BE A BETTER WAY
                                             this.xCirculo = parseInt(daC[i].getAttribute("cx"))
                                             this.yCirculo = parseInt(daC[i].getAttribute("cy"))
