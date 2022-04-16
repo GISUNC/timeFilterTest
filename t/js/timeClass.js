@@ -158,6 +158,7 @@ var TF = { //time filters to manage tiles of different years
                     //dealing with the annoying Safari I had to create an SVG that serves as a button that connects to the SVGs in the leaflet map
                     const svgParentElem = document.createElementNS(xmlns, "svg");
                     svgParentElem.setAttributeNS(null, "id", this.svgParentName);
+                    svgParentElem.setAttributeNS(null, "counter", this.counter);
                     svgParentElem.setAttributeNS(null, "viewBox", "0 0 " + this.divDimension.width + " " +this.divDimension.height);
                     svgParentElem.setAttributeNS(null, "style", "position: absolute; -webkit-transform: translate3d(0,0,0); -webkit-user-select: none;-moz-user-select: none;-ms-user-select: none; user-select: none; pointer-events: none; z-index: 1000");
                     /// very important to have the user-select in none, otherwise I could not interact with the background
@@ -306,10 +307,11 @@ var TF = { //time filters to manage tiles of different years
                             svgParentElem.innerHTML = daInnerHTML; // safari issue solved with parentSVG above all divs
                             // this is important 
                             if(this.leaflet == true){
-                            svgParentElem.setAttributeNS(null, "class", "leaflet-control")
+                            svgParentElem.setAttributeNS(null, "class", "leaflet-control svgpapa")
                             this.leafMaps[0]._container.getElementsByClassName("leaflet-control-container")[0].appendChild(svgParentElem)
                             }
                             if(this.leaflet == false){
+                                svgParentElem.setAttributeNS(null, "class", "svgpapa")
                                 document.getElementById(this.divNames[0]).appendChild(svgParentElem)
                             }
                             this.updatePosition()
@@ -402,6 +404,7 @@ var TF = { //time filters to manage tiles of different years
     makePies: function(divArray, iRad){ 
         this.updatePieArray({divArray, iRad})
         if (iRad == null){iRad = .628;} // orginally was 36 degrees I changed it to radians
+        var thisObj = this.arrayObj[parseFloat(this.svgParent.getAttribute('counter'))]
         var pies = divArray[0]
         var iInputAngle = iRad
         {for(i=1; i<divArray.length; i++)
@@ -424,7 +427,6 @@ var TF = { //time filters to manage tiles of different years
         var r = parseFloat(daMask0.getAttribute("r"));
         var xCenter = parseFloat(daMask0.getAttribute("cx"));
         var yCenter = parseFloat(daMask0.getAttribute("cy"));
-         console.log(yCenter)
         var nSVG = divArray.length
                 
         
@@ -461,13 +463,14 @@ var TF = { //time filters to manage tiles of different years
           var daTextSection = "M "+daMxText+" "+daMyText+
                             "A "+(r+pieTextBuffer)+" "+(r+pieTextBuffer)+", 0, 0, 1, "+daMx2Text+" "+daMy2Text
       
-        var daName = this.filterNames[this.divNames.indexOf(divArray[i])]
+        // var daNameOfPie = this.filterNames[this.divNames.indexOf(divArray[i])]
+        var daNameOfPie = thisObj.filterNames[thisObj.divNames.indexOf(divArray[i])]
         var displayMask = ''  
         if (this.textMask == true) {displayMask = ' display=\"none\" '}
           var daTextPath =  '<path id=\"pathText_'+divArray[i]+ '\" class=\"pies ' + divArray[0] + ' pie-text-path\" cx=\"' + xCenter + '\" cy=\"' 
           + yCenter + '\" r=\"' + r + '\" d=\"' + daTextSection + '\" style=\"stroke-width:0; stroke: rgb(0, 0, 0); fill: none;\"></path>' + 
           '<text class=\"pie-text\" text-anchor=\"middle\"' + displayMask +'><textPath startOffset=\"50%\"  href=\"#pathText_' + divArray[i] + '\">'
-          + daName + '</textPath></text>' 
+          + daNameOfPie + '</textPath></text>' 
 
           if (document.getElementById('pathText_'+divArray[i])){
             var daPath = document.getElementById('pathText_'+divArray[i])
@@ -476,7 +479,7 @@ var TF = { //time filters to manage tiles of different years
    
         }
         var daText =  '<text text-anchor=\"middle\" class=\"pie-text-mask\" style=\ font-size:' + pieTextSize +'px; \"><textPath startOffset=\"50%\"  href=\"#pathText_' + divArray[i] + '\">'+
-        daName + '</textPath></text>'  
+        daNameOfPie + '</textPath></text>'  
 
           daMask.innerHTML = '<path id=\"path_'+divArray[i]+ '\" class=\"daC pies ' + divArray[0] + '\" cx=\"' + xCenter + '\" cy=\"' 
                             + yCenter + '\" r=\"' + r + '\" d=\"' + daSection + '\" fill=\"#fdcc8a\"></path>' 
@@ -494,7 +497,7 @@ var TF = { //time filters to manage tiles of different years
                 circle.innerHTML = daInnerHTML
                 // console.log(this.svgParentName)
 
-        document.getElementById(this.svgParentName).appendChild(circle)                   
+       this.svgParent.appendChild(circle)                   
         // annoying Safari
         daSVGmerge.parentNode.appendChild(daSVGmerge).appendChild(daMask);
       
@@ -649,11 +652,13 @@ var TF = { //time filters to manage tiles of different years
                         daSVGbutton:undefined,
                         daSVG:undefined,      
                         onMouseDown: function(evt){
+                                elEvt = evt
+                                this.svgParent = evt.target.closest('.svgpapa')
                                 const contDiv = document.getElementById(evt.target.classList[1])
                                 if (contDiv != null){
                                     this.contDiv = contDiv
                                     this.svgParentName = 'svgP'+ evt.target.classList[1]
-                                    this.svgParent = document.getElementById(this.svgParentName)
+                                    this.svgParent = evt.target.closest('.svgpapa')
                                     this.calcDivDimensions()
                                 }
 
@@ -795,8 +800,10 @@ var TF = { //time filters to manage tiles of different years
                                     if(evt.touches)
                                     {this.newP = this.getMouse(evt.touches[0]) // might be needed check cellphone
                                         if (this.circleRotator == true){
-                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
+                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.offset.x - this.divDimension.xProp),(this.newP.y - this.offset.y - this.divDimension.yProp))) - this.pieRotInit
                                             if (!isNaN(delta)) {this.pieRotDelta =  delta}
+                                            
+
                                         }
                                         this.doUpdate()
                                     }
@@ -805,7 +812,7 @@ var TF = { //time filters to manage tiles of different years
                                         // {  
                                             this.newP = this.getMouse(evt);// needed
                                         if (this.circleRotator == true){
-                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
+                                            var delta = (Math.PI - Math.atan2((this.newP.x  - this.offset.x - this.divDimension.xProp),(this.newP.y  - this.offset.y - this.divDimension.yProp))) - this.pieRotInit
                                             if (!isNaN(delta)) {this.pieRotDelta =  delta}
                                             }
                                             this.doUpdate()};// change

@@ -701,14 +701,14 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                     if (evt.touches){
                                             this.newP=this.getMouse(evt.touches[0]) // check if this this is a problem using cellphone
                                             if (this.circleRotator == true)
-                                            {this.pieRotInit = Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))
+                                            {this.pieRotInit = Math.PI - Math.atan2((this.newP.x - this.offset.x),(this.newP.y - this.offset.y))
                                             }
                                             this.doUpdate(evt) // veryfy touchscreen
                                            }
                                     else{
                                             this.newP=this.getMouse(evt);
                                             if (this.circleRotator == true)
-                                            {this.pieRotInit = Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))
+                                            {this.pieRotInit = Math.PI - Math.atan2((this.newP.x - this.offset.x),(this.newP.y - this.offset.y))
                                                 }
                                            
                                             this.doUpdate(evt);
@@ -744,8 +744,9 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                     if(evt.touches)
                                     {this.newP = this.getMouse(evt.touches[0]) // might be needed check cellphone
                                         if (this.circleRotator == true){
-                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
+                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.offset.x),(this.newP.y - this.offset.y))) - this.pieRotInit
                                             if (!isNaN(delta)) {this.pieRotDelta =  delta}
+                                            console.log(delta)
                                         }
                                         this.doUpdate()
                                     }
@@ -755,8 +756,9 @@ function TF (objName){ return { //time filters to manage tiles of different year
                                         // {  
                                             this.newP = this.getMouse(evt);// needed
                                         if (this.circleRotator == true){
-                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.divDimension.xProp),(this.newP.y - this.divDimension.yProp))) - this.pieRotInit
+                                            var delta = (Math.PI - Math.atan2((this.newP.x - this.offset.x),(this.newP.y - this.offset.y))) - this.pieRotInit
                                             if (!isNaN(delta)) {this.pieRotDelta =  delta}
+                                            console.log(delta)
                                             }
                                             this.doUpdate()};// change
                                     // }
