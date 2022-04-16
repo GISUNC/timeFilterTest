@@ -15,42 +15,55 @@
 
 </head>
 <style>
+
+    /* A PROBLEM WITH THE MARGIN */
     body {
         background-color: gray;
-        margin: 0px;
+        margin: 40px;
 
     }
 
-    div {
+    /* div {
         width: 300px;
         height:300px;
         padding-left: 0;
         margin: 0px;
-        border-collapse: collapse;
+        } */
+
+        #damap {
+        width: 300px;
+        height:300px;
+        /* background-color: red; */
+
+        /* padding-left: 0; */
+        /* margin: 0px; */
         }
+        #damapi {
+        width: 1000px;
+        height:300px;
+        /* background-color: blue; */
 
-    .testClass {
-        position: absolute;
-         background-color: burlywood;
-         padding-left: 0;
-         margin: 0px;
-         border-collapse: collapse;
-
-
-    }
+        /* padding-left: 0; */
+        /* margin: 0px; */
+        }
+     
 </style>
 
 <script src ="./js/L.Map.Sync-min.js"></script>
-<script src="./js/timeFilterpercentClass.js"></script>
+<script src="./js/timeClass.js"></script>
 
 <body>
+    <div id="damapi"></div>
+    <div id="damap" class="damap"></div>
+   
 
-    <div id="daMap"></div>
-    <div id="daMap2"></div>
+   
+   
 
 
 <script>
-    const timeF3 = TF()
+    var timeF3 = TF;
+    var timeF2 = TF;
     // const timeF = TF
     timeF3.divNames = ['Y20','Y09', 'Y83','Y77', 'Y37']//['Y1937','Y1977','Y1983',,'Y2020']
     timeF3.filterNames = ['Year 2020','Year 2009', 'Year 1983','Year 1977', 'Year 1937']//['Y1937','Y1977','Y1983',,'Y2020']
@@ -65,9 +78,8 @@
 ]
 timeF3.zoom = 17;
 timeF3.center = [18.144475406614973, -65.30060941442248,];
-timeF3.start('daMap',tileArray,'circle',)
+timeF3.start('damap',tileArray,'circle',)
 
-const timeF2 = TF(  )
     // const timeF = TF
     timeF2.filterNames = ['Year 2020','Year 2009', 'Year 1983','Year 1977', 'Year 1937']//['Y1937','Y1977','Y1983',,'Y2020']
 
@@ -80,43 +92,14 @@ const timeF2 = TF(  )
     'https://cartocollective.blob.core.windows.net/vieques/v1937/{z}/{x}/{y}.png'
 ]
 timeF2.zoom = 17;
-timeF2.center = [18.144475406614973, -65.30060941442248,];
-timeF2.divNames = ['Y20b','Y09b', 'Y83b','Y77b', 'Y37b']//['Y1937','Y1977','Y1983',,'Y2020']
-timeF2.start('daMap2',tileArray,'circle',)
+timeF2.center = [18.14, -65.3,];
+timeF2.divNames = ['Y20b','Y09b', 'Y83b','Y77b', 'Y37b']
+timeF2.namesInDiv = false;
+
+timeF2.start('damapi',tileArray,'circle',)
 
 
 
-// function listAllEventListeners() {
-//   const allElements = Array.prototype.slice.call(document.querySelectorAll('*'));
-//   allElements.push(document);
-//   allElements.push(window);
-
-//   const types = [];
-
-//   for (let ev in window) {
-//     if (/^on/.test(ev)) types[types.length] = ev;
-//   }
-
-//   let elements = [];
-//   for (let i = 0; i < allElements.length; i++) {
-//     const currentElement = allElements[i];
-//     for (let j = 0; j < types.length; j++) {
-//       if (typeof currentElement[types[j]] === 'function') {
-//         elements.push({
-//           "node": currentElement,
-//           "type": types[j],
-//           "func": currentElement[types[j]].toString(),
-//         });
-//       }
-//     }
-//   }
-
-//   return elements.sort(function(a,b) {
-//     return a.type.localeCompare(b.type);
-//   });
-// }
-
-// console.table(listAllEventListeners())
 
 </script>
 </body>

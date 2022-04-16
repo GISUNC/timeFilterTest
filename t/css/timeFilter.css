@@ -11,6 +11,8 @@
   padding-left: 0;
   margin: 0px;
   border-collapse: collapse;
+  width: inherit;
+  height:inherit;
 }
 
 .timeFimg{
