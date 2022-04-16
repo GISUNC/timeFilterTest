@@ -1,3 +1,5 @@
+// read svg parent as an attribute
+
 var elEvt = undefined
 // to do 
 // change the method for creating the pieArrays
@@ -6,6 +8,7 @@ var elEvt = undefined
 var TF = { //time filters to manage tiles of different years
     start: function(containerDIV,tileArray,svgType, options) {
         this.divContainer = containerDIV;
+        this.leafMaps = [];
         this.leafTiles = tileArray;
         this.assignNamesToDiv(containerDIV);
         if (this.leaflet == true) {
@@ -50,6 +53,7 @@ var TF = { //time filters to manage tiles of different years
     objName: 'TF',//'timeF3',
     divContainer: "daMap",
     svgParentName: undefined,
+    svgParent:undefined,
     counter:0,
     update: true,
     pieArray: [],
@@ -295,7 +299,7 @@ var TF = { //time filters to manage tiles of different years
                             document.getElementById(this.divNames[i]).style.webkitClipPath  = 'url(#mask_' + daID + ')';
                             document.getElementById(this.divNames[i]).style.zIndex = "999";
                         }
-                        document.getElementById(this.divContainer).append(document.getElementById(this.divNames[i]))// version i works with Firefox and Chrome however safari has the zindex issue. I am going to first try to put all svg in the same div then on the same
+                        this.contDiv.append(document.getElementById(this.divNames[i]))// version i works with Firefox and Chrome however safari has the zindex issue. I am going to first try to put all svg in the same div then on the same
                         // I made this version for the safari issues
                         daInnerHTML = daInnerHTML + svgButtons
                         } // end loop by div layer              
@@ -405,11 +409,13 @@ var TF = { //time filters to manage tiles of different years
                 }
         //var svgParent = document.getElementById('SVGparent');
         var daSVG0 = document.getElementById("svg_" + divArray[0])
+        
         if (this.daSVG.getAttribute('pies') == null)
         {var maskOrPath = "maskC_"}
         else 
         {var maskOrPath = "path_"}
         var daMask0 = document.getElementById(maskOrPath + divArray[0])
+        // console.log(daMask0)
         var daRadioStroke = document.getElementById("daRadioStroke_" + divArray[0])
         var viewBox0 = daSVG0.getAttribute('viewBox')
         var daRadioCX = daRadioStroke.getAttribute('cx')
@@ -418,6 +424,7 @@ var TF = { //time filters to manage tiles of different years
         var r = parseFloat(daMask0.getAttribute("r"));
         var xCenter = parseFloat(daMask0.getAttribute("cx"));
         var yCenter = parseFloat(daMask0.getAttribute("cy"));
+         console.log(yCenter)
         var nSVG = divArray.length
                 
         
@@ -431,7 +438,7 @@ var TF = { //time filters to manage tiles of different years
           if(this.circleRotator == false){
           document.querySelectorAll("."+ divArray[i]+".rotator").forEach(e=>e.parentNode.remove())
         }
-          var daSVGmerge = document.getElementById("svg_" + divArray[i])
+           daSVGmerge = document.getElementById("svg_" + divArray[i])
           var daMask = document.getElementById("mask_" + divArray[i])
           var sAngle = (Math.PI*2)/nSVG
           var daMx = (xCenter + Math.sin(iRad)*r)
@@ -485,6 +492,7 @@ var TF = { //time filters to manage tiles of different years
                                         + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + ' ></circle>' + daTextPath
                 circle.innerHTML = daInnerHTML
+                // console.log(this.svgParentName)
 
         document.getElementById(this.svgParentName).appendChild(circle)                   
         // annoying Safari
@@ -503,14 +511,15 @@ var TF = { //time filters to manage tiles of different years
         },
     svgPiesObjs:[],
     svgPiesArray: [],
+    // Function not being used
     setActiveSVG: function(){for(var i=0; i<this.divNames.length;i++){
         if(this.currentID == this.divNames[i]){this.activeSVG = i};};
     },
     updatePosition: function(){
                 this.positionArray = []
-                var daC = document.getElementsByClassName("daC")
+                var daC = this.contDiv.getElementsByClassName("daC")
                 for (i=0; i<daC.length; i++){
-                    var daObj = {   id: daC[i].getAttribute("id").split("_")[1], 
+                    var daObj = {  id: daC[i].getAttribute("id").split("_")[1], 
                                     x: daC[i].getAttribute("cx"), 
                                     y: daC[i].getAttribute("cy"), 
                                     r: daC[i].getAttribute("r")
@@ -565,7 +574,6 @@ var TF = { //time filters to manage tiles of different years
                                                                         if (this.daSVG.getAttribute('pies') == null) {
                                                                             divArray=[this.positionArray[curI].id, this.positionArray[i].id];
                                                                             document.querySelectorAll(".iAni."+this.positionArray[i].id).forEach(e=>e.parentNode.removeChild(e))
-                                                                            // this.positionArray.splice(i,1)
                                                                         }
                                                                         else {  divArray = this.daSVG.getAttribute("pies").split('.');
                                                                                 divArray.push(this.positionArray[i].id);
@@ -642,8 +650,11 @@ var TF = { //time filters to manage tiles of different years
                         daSVG:undefined,      
                         onMouseDown: function(evt){
                                 const contDiv = document.getElementById(evt.target.classList[1])
-                                if (contDiv != null){this.contDiv = contDiv
-                                this.calcDivDimensions()
+                                if (contDiv != null){
+                                    this.contDiv = contDiv
+                                    this.svgParentName = 'svgP'+ evt.target.classList[1]
+                                    this.svgParent = document.getElementById(this.svgParentName)
+                                    this.calcDivDimensions()
                                 }
 
                                 // Loop to dissable the Leaflet dragging // change to an arrow forEach function 
@@ -802,7 +813,7 @@ var TF = { //time filters to manage tiles of different years
                                 },
                                 
                             daMouseUp: function() {
-                                    if(this.bmousedown == undefined){console.log(this)}
+                                    
 
                                     if (this.circleRotator == true)
                                     {  this.bmousedown=0;
@@ -860,7 +871,6 @@ var TF = { //time filters to manage tiles of different years
                                             daRing[i].style.pointerEvents  = "fill";
                                         }
                                         var daC = this.daSVG.getElementsByClassName("daC")
-                                        console.log(daC)
                                         for (var i=0; i<daC.length;i++){ //THERE HAS TO BE A BETTER WAY
                                             this.xCirculo = parseInt(daC[i].getAttribute("cx"))
                                             this.yCirculo = parseInt(daC[i].getAttribute("cy"))
@@ -900,7 +910,7 @@ var TF = { //time filters to manage tiles of different years
                                             if (this.text == true){
                                                 var daText = this.daSVG.getElementsByClassName('textC')
                                                 for (i=0; i<daText.length;i++){
-                                                    var ydis = this.daSVGbutton.getBoundingClientRect().y - this.contDiv.getBoundingClientRect().y + this.daSVGbutton.getBoundingClientRect().height/2                                        
+                                                    var ydis = this.daSVGbutton.getBoundingClientRect().y - this.offset.y + this.daSVGbutton.getBoundingClientRect().height/2                                        
                                                     daText[i].setAttributeNS(null,'y', ydis - this.divDimension.fontSize/2 - rRadio) 
                                             }
                                                 var daText = this.daSVG.getElementsByClassName('text-above-circle')
