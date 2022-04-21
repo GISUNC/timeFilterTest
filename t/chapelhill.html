@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loupe Object</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <link rel="stylesheet" href="./css/timeFilter.css"/>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+</head>
+<style>
+    body {
+        background-color: gray;
+        margin: 0px;
+
+    }
+
+    div {
+        width: 100%;
+        height:100%;
+        padding-left: 0;
+        margin: 0px;
+        border-collapse: collapse;
+        }
+
+    .testClass {
+        position: absolute;
+         background-color: burlywood;
+         padding-left: 0;
+         margin: 0px;
+         border-collapse: collapse;
+
+
+    }
+</style>
+
+<script src ="./js/L.Map.Sync-min.js"></script>
+<script src="./js/timeClass.js"></script>
+
+<body>
+
+    <div id="daMap">
+
+</div>
+<script>
+    var timeF = TF;
+    // const timeF = TF
+    timeF.divNames = ['Y2020','Y2014','Y2004','Y1993', 'Y1955']
+    timeF.filterNames =  ['Year 2020','Year 2014','Year 2004','Year 1993', 'Year 1955']
+    var tileArray =
+[   
+    'https://cartocollective.blob.core.windows.net/chapelhill/2020/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/chapelhill/2014/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/chapelhill/2004/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/chapelhill/1993/{z}/{x}/{y}.png',
+    'https://cartocollective.blob.core.windows.net/chapelhill/1955/{z}/{x}/{y}.png',
+]
+timeF.zoom = 16;
+timeF.center = [35.91298424553172, -79.06008481979372];
+timeF.start('daMap',tileArray,'circle',)
+timeF.filterArray = ["none","none","sepia(30%) brightness(110%) contrast(110%)","none","sepia(70%)"];
+timeF.assignFilters()
+
+
+</script>
+</body>
+</html>
