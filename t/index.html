@@ -41,7 +41,7 @@
 </style>
 
 <script src ="./js/L.Map.Sync-min.js"></script>
-<script src="./js/timeFilterpercent.js"></script>
+<script src="./js/timeClass.js"></script>
 
 <body>
 
@@ -49,7 +49,7 @@
 
 </div>
 <script>
-    const timeF = TF('timeF')
+    var timeF = TF;
     // const timeF = TF
     timeF.divNames = ['Y20','Y09', 'Y83','Y77', 'Y37']//['Y1937','Y1977','Y1983',,'Y2020']
     timeF.filterNames = ['Year 2020','Year 2009', 'Year 1983','Year 1977', 'Year 1937']//['Y1937','Y1977','Y1983',,'Y2020']
@@ -62,8 +62,8 @@
     'https://cartocollective.blob.core.windows.net/vieques/v1977/{z}/{x}/{y}.png',
     'https://cartocollective.blob.core.windows.net/vieques/v1937/{z}/{x}/{y}.png'
 ]
-timeF.zoom = 17;
-timeF.center = [18.144475406614973, -65.30060941442248,];
+timeF.zoom = 13;
+timeF.center = [18.134677413256696,-65.32084465026857,];
 
 // timeF.assignNamesToDiv()
 // timeF.startLeafDiv()
