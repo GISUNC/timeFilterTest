@@ -1,4 +1,5 @@
 // read svg parent as an attribute
+// The vertical and horizontal controls are running outside the div
 // DIV cant have underscore for name since I use it as one of the methods. I need to fix this
 var elEvt = undefined
 // to do 
@@ -20,7 +21,7 @@ var TF = { //time filters to manage tiles of different years
         if (svgType == null) {this.svgType = "circle" } else {this.svgType = svgType};
         this.makeSVG()
         this.addListerners()
-        this.listenResize()  
+        // this.listenResize()  
         this.arrayObj.push(this.returnObj())
         this.counter =  this.counter + 1
 
@@ -35,7 +36,7 @@ var TF = { //time filters to manage tiles of different years
         this.calcDivDimensions();
         this.makeSVG()
         this.addListerners()
-        this.listenResize()  
+        // this.listenResize()  
         this.arrayObj.push(this.returnObj())
         this.counter =  this.counter + 1
         
@@ -546,23 +547,23 @@ var TF = { //time filters to manage tiles of different years
                                 this.positionArray.push(daObj);
                 }
             },
-                    newP: { x: 0, y: 0 }, 
-                    newR: 0,
-                    position: { x: 0, y: 0 },
-                    activeSVG: null, // the index of the active SVG
-                    pieRot: 0,
-                    activePies:"",
-                    pieRotInit:0,
-                    pieRotDelta:0,
+    newP: { x: 0, y: 0 }, 
+    newR: 0,
+    position: { x: 0, y: 0 },
+    activeSVG: null, // the index of the active SVG
+    pieRot: 0,
+    activePies:"",
+    pieRotInit:0,
+    pieRotDelta:0,
 
-                    positionArray: [], // {id:"back",x:0,y:0,r:0} working with pies so each cicle "knows" their relative distance
-                    mergeSVG: true, // i am going to use this to instruct if it is ok to merge the circles
-                    distanceArray: [0],// an array that will know the relative distance to the active circle
-                    insideArray: [false],
-                    minDistance: 10, // minimum distance for the circles to be merged 
-                    mousedown: 0,
-                    bmousedown:0, 
-                    // NEW End for the animateSVG object},
+    positionArray: [], // {id:"back",x:0,y:0,r:0} working with pies so each cicle "knows" their relative distance
+    mergeSVG: true, // i am going to use this to instruct if it is ok to merge the circles
+    distanceArray: [0],// an array that will know the relative distance to the active circle
+    insideArray: [false],
+    minDistance: 10, // minimum distance for the circles to be merged 
+    mousedown: 0,
+    bmousedown:0, 
+    // NEW End for the animateSVG object},
 
             calculateDistance: function(){
                                         this.distanceArray = []
@@ -689,7 +690,7 @@ var TF = { //time filters to manage tiles of different years
                                     this.currentID = evt.target.getAttribute("class").split(" ")[0] // gets the ID from the class //there has to be a better way
                                     this.daSVG = document.getElementById("svg_" + this.currentID)
                                     this.daSVGbutton = evt.target
-                                    if (this.daSVGbutton.nodeName == 'line'){this.daSVGbutton = document.getElementById(daSVGbutton.id.split("daLine")[1])}
+                                    if (this.daSVGbutton.nodeName == 'line'){this.daSVGbutton = document.getElementById(this.daSVGbutton.id.split("daLine")[1])}
                                     var daCircle = evt.target
                                     if (this.daSVGbutton.nodeName == 'line'){daCircle = document.getElementById(this.daSVGbutton.id.split("daLine")[1])}
                                     this.divDimension.xProp = parseFloat(daCircle.getAttribute("xprop"))
