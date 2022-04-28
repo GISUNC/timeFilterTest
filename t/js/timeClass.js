@@ -56,8 +56,11 @@ var TF = { //time filters to manage tiles of different years
             zoom: _.zoom,
             center: _.center,
             leaflet: _.leaflet,
+            leafList: _.leafList,
             static: _.static,
             text:_.text,
+            svgType: _.svgType,
+            mergeSVG: _.mergeSVG,
             textMask:_.textMask,
             namesInDiv:_.namesInDiv,
             windowDimension:_.windowDimension
@@ -678,12 +681,14 @@ var TF = { //time filters to manage tiles of different years
                                     this.svgParent = evt.target.closest('.svgpapa')
                                     this.calcDivDimensions()
                                 }
-
+                                iObj = this.arrayObj[parseInt(this.svgParent.getAttribute('counter'))]
+                                this.mergeSVG = iObj.mergeSVG;
+                                this.svgType = iObj.svgType;
                                 // Loop to dissable the Leaflet dragging // change to an arrow forEach function 
                                 // MAKE EVT have attribute leaflet 
-                                if(this.leaflet == true){
-                                for (var i=0; i<this.leafList.length; i++) {
-                                    this.leafList[i].dragging.disable()
+                                if(iObj.leaflet == true){
+                                for (var i=0; i<iObj.leafList.length; i++) {
+                                    iObj.leafList[i].dragging.disable()
                                     }}
                                     // maybe do an if statemet to make it not ittarate eavery time, 
                                     document.querySelectorAll(".daAnim, .arrow").forEach(e=>e.style.animation = "none")
@@ -703,7 +708,7 @@ var TF = { //time filters to manage tiles of different years
                                     }
                                     this.ownerSVG = this.daSVG;
                                     
-                                    if (this.leaflet == true){this.ownerDiv = this.ownerSVG.parentElement.parentElement;}
+                                    if (iObj.leaflet == true){this.ownerDiv = this.ownerSVG.parentElement.parentElement;}
                                     else {this.ownerDiv = this.ownerSVG.parentElement}
                                     
                                     this.offset = this.ownerDiv.getBoundingClientRect()
@@ -848,9 +853,9 @@ var TF = { //time filters to manage tiles of different years
                                             for (i=0;i < daRadio.length; i++){
                                                 daRadio[i].style.pointerEvents  = "stroke";
                                             } 
-                                    if(this.leaflet == true){
-                                    for (var i=0; i<this.leafList.length; i++) {
-                                        this.leafList[i].dragging.enable()
+                                    if(iObj.leaflet == true){
+                                    for (var i=0; i<iObj.leafList.length; i++) {
+                                        iObj.leafList[i].dragging.enable()
                                     }
                                     }}
                                     //If statements to activate the radio animation
@@ -859,15 +864,15 @@ var TF = { //time filters to manage tiles of different years
                                         {this.daSVG.getAttribute("pies").split('.').forEach(e=>this.radioAnimationOn('.'+e+'.daR.daAnim'))}
                                         else{this.radioAnimationOn('.'+this.currentID+'.daR.daAnim');}                                           
                                         //Enable leaflet dragging 
-                                        if(this.leaflet == true){
-                                        for (var i=0; i<this.leafList.length; i++) {
-                                            this.leafList[i].dragging.enable()
+                                        if(iObj.leaflet == true){
+                                        for (var i=0; i<iObj.leafList.length; i++) {
+                                            iObj.leafList[i].dragging.enable()
                                         } 
                                     }}
                                     //Enable leaflet dragging
-                                    if(this.leaflet == true){
-                                    for (i=0; i<this.leafList.length; i++) {
-                                        this.leafList[i].dragging.enable()
+                                    if(iObj.leaflet == true){
+                                    for (i=0; i<iObj.leafList.length; i++) {
+                                        iObj.leafList[i].dragging.enable()
                                     }}
                                     // Start IF statment if working moving the center of the circle
                                     if (this.circleMove == true) {
@@ -985,7 +990,7 @@ var TF = { //time filters to manage tiles of different years
                                             if (bboxY < -1*this.divDimension.height/2) {bboxY = -1*this.divDimension.height/2}
                                             
                                         }
-                                        newViewBox = bboxX + " " + bboxY + " " + this.divDimension.width + " " + this.divDimension.height;
+                                        var newViewBox = bboxX + " " + bboxY + " " + this.divDimension.width + " " + this.divDimension.height;
                                         this.daSVG.setAttributeNS(null, "viewBox", newViewBox)
                                         var currentR = this.daSVG.getElementsByClassName("daR")[0].getAttribute("r")
                                         this.daSVGbutton.parentElement.parentElement.setAttributeNS(null, "transform", 'translate(' +  -1*bboxX + ' ' +  -1*bboxY + ')')                                      
@@ -994,7 +999,6 @@ var TF = { //time filters to manage tiles of different years
                                         
                                         var xdis = this.daSVGbutton.getBoundingClientRect().x - this.offset.x + this.daSVGbutton.getBoundingClientRect().width/2
                                         var ydis = this.daSVGbutton.getBoundingClientRect().y - this.offset.y + this.daSVGbutton.getBoundingClientRect().height/2                                        
-                                        
                                         
                                         var daC = this.daSVG.getElementsByClassName("daC")
                                         if (this.svgType == "circle"){
@@ -1014,12 +1018,12 @@ var TF = { //time filters to manage tiles of different years
                                             }};
                                         }
 
-                                        if (this.svgType == "vertical" && xdis > 0){ 
+                                        if (this.svgType == "vertical" && xdis >= 0){ 
                                             for (i=0; i<daC.length;i++){
                                                 daC[i].setAttributeNS(null,'x',xdis)
                                                 }
                                         }
-                                        if (this.svgType == "horizontal" && ydis > 0){ // ydis might be usefull to make the moving windows
+                                        if (this.svgType == "horizontal" && ydis >= 0){ // ydis might be usefull to make the moving windows
                                             for (i=0; i<daC.length;i++){
                                                 daC[i].setAttributeNS(null,'y',ydis)
                                                 }
@@ -1058,7 +1062,7 @@ var TF = { //time filters to manage tiles of different years
                         // canvas.style.zIndex   = l;
                         canvas.style.position = "absolute";
                         // canvas.style.border   = "1px solid";
-                        canvas.style.backgroundColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+                        canvas.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
                         daDiv.appendChild(canvas);
                     
                     var ctx = canvas.getContext('2d');
