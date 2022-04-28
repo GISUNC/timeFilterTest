@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Number</title>
+</head>
+
+<body>
+<!-- <canvas id="canvas1" width="500" height="500"></canvas> -->
+<div id="test" style="width: 500px; height: 500px;background-color: aqua;"></div>
+</body>
+<script>
+
+function canvasPattern(daDivId, layers){
+    for (var l = 0; l < layers; l++) {
+    var text = l+' '
+    var daDivCont = document.getElementById(daDivId);
+    var daDiv = document.createElement('div');
+    daDiv.setAttributeNS(null, "id", "timeFilterCanvasDiv"+l)   
+
+    daDiv.setAttributeNS(null, "style", "width:inherit; height:inherit; background-color:inherit; position:absolute; z-index:"+l+";")   
+    daDivCont.appendChild(daDiv)
+    var canvas = document.createElement('canvas');
+        canvas.id     = 'canv'+text;
+        canvas.width  = daDivCont.getBoundingClientRect().width - 1;
+        canvas.height = daDivCont.getBoundingClientRect().height - 1 ;
+        // canvas.style.zIndex   = l;
+        canvas.style.position = "absolute";
+        canvas.style.border   = "1px solid";
+        daDiv.appendChild(canvas);
+    
+    var ctx = canvas.getContext('2d');
+    
+    var fontSize = daDivCont.getBoundingClientRect().width / 10
+
+    ctx.font = fontSize +'px Arial';
+    var txtW = ctx.measureText(text).width
+    var txtH = fontSize//ctx.measureText(text).height
+    
+    var verticalRep = Math.round(daDivCont.getBoundingClientRect().width / txtW)
+    var horizontalRep = Math.round(daDivCont.getBoundingClientRect().height / txtH)
+
+    console.log(verticalRep)
+    for (var i = 0; i < verticalRep; i++){
+        for (var j = 0; j<horizontalRep+1; j++){
+    ctx.fillText(text, txtW*i, txtH*j);
+    }}}
+}
+
+</script>
+
+</html>

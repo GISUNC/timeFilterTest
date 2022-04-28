@@ -1,5 +1,5 @@
 // read svg parent as an attribute
-
+// DIV cant have underscore for name since I use it as one of the methods. I need to fix this
 var elEvt = undefined
 // to do 
 // change the method for creating the pieArrays
@@ -7,7 +7,8 @@ var elEvt = undefined
 // replace the name leafTiles to imgTiles
 var TF = { //time filters to manage tiles of different years
     start: function(containerDIV,tileArray,svgType, options) {
-        this.divContainer = containerDIV;
+        this.divNames = []; //  I changed this method 
+        this.divContainerName = containerDIV;
         this.leafMaps = [];
         this.leafTiles = tileArray;
         this.assignNamesToDiv(containerDIV);
@@ -24,12 +25,27 @@ var TF = { //time filters to manage tiles of different years
         this.counter =  this.counter + 1
 
     },
+    test:function(containerDivID, layers, svgType){
+        this.divNames = [];
+        this.divContainerName = containerDivID;
+        this.contDiv = document.getElementById(containerDivID)
+                                if (this.contDiv == null) {return console.log("no div whith that ID")} 
+        this.canvasPattern(containerDivID,layers)
+        if (svgType == null) {this.svgType = "circle" } else {this.svgType = svgType};
+        this.calcDivDimensions();
+        this.makeSVG()
+        this.addListerners()
+        this.listenResize()  
+        this.arrayObj.push(this.returnObj())
+        this.counter =  this.counter + 1
+        
+    },
     arrayObj: [],
     returnObj: function(){
         let _ = this;
         const tF = {
             counter:_.counter,
-            divContainer: _.divContainer,
+            divContainerName: _.divContainerName,
             svgParentName: _.svgParentName,
             pieArray: _.pieArray,
             contDiv: _.contDiv,
@@ -51,7 +67,7 @@ var TF = { //time filters to manage tiles of different years
         return  tF//Object.assign(tF, _.divDimension)
     },
     objName: 'TF',//'timeF3',
-    divContainer: "daMap",
+    divContainerName: "daMap",
     svgParentName: undefined,
     svgParent:undefined,
     counter:0,
@@ -102,15 +118,15 @@ var TF = { //time filters to manage tiles of different years
                         }
                     },
     assignNamesToDiv: function(containerDIVid){
-                            // if (containerDIVid == undefined && this.divContainer) {
-                            //     this.contDiv = document.getElementById(this.divContainer)
+                            // if (containerDIVid == undefined && this.divContainerName) {
+                            //     this.contDiv = document.getElementById(this.divContainerName)
                             //     }
                             if (containerDIVid) {
-                                this.divContainer = containerDIVid;
+                                this.divContainerName = containerDIVid;
                                 this.contDiv = document.getElementById(containerDIVid)
                                 if (this.contDiv == null) {return console.log("no div whith that ID")} } //else { this.contDivAssigned = true}
                             this.divNamesFunction()
-                            if (this.namesInDiv == true) {return true}
+                            // if (this.namesInDiv == true) {return true}
                             for (var i = 0; i < this.divNames.length; i++)
                             {
                                 var iDiv = document.createElement('div');
@@ -132,7 +148,7 @@ var TF = { //time filters to manage tiles of different years
     divNamesFunction : function() {
                             if (this.divNames.length != this.leafTiles.length)
                             {for (i = 0; i < this.leafTiles.length; i++)
-                                {this.divNames.push("tile" + i) }
+                                {this.divNames.push(this.divContainerName + i) }
                             }
                             else true},
     calcDivDimensions: function() {   
@@ -150,7 +166,7 @@ var TF = { //time filters to manage tiles of different years
     svgType: "circle",
     svgButton:"", // svgTypes options: "circle", "pie", "circle-pie", "vertical", "horizontal",
     makeSVG : function(){ 
-                    this.svgParentName = 'svgP'+this.divContainer
+                    this.svgParentName = 'svgP'+this.divContainerName
                     const xmlns = "http://www.w3.org/2000/svg";
                     var xText = this.divDimension.xCenter - this.divDimension.fontSize;
                     var yText = this.divDimension.yCenter - this.divDimension.fontSize - this.divDimension.r;
@@ -193,29 +209,29 @@ var TF = { //time filters to manage tiles of different years
                         // var posSVG = {id:daID, x:this.divDimension.width * xProp, y:this.divDimension.height * yProp,r: this.divDimension.r};
                         // this.positionArray.push(posSVG)
                         /// The SVG witht the arrows
-                        var daArrowN  = '<path id=\"daArrow_N_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +' arrow Ani\" d=\"M 250 235 L253.5 241.06217782649108 L246.5 241.06217782649108 Z\" fill=\"#000\" ></path>'   // check the stroke width in the CSS since it changes with the size of the container div
-                        var daArrowS  = '<path id=\"daArrow_S_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +' arrow iAni\" d=\"M 250 265 L246.5 258.93782217350895 L253.5 258.93782217350895 Z\" fill=\"#000\" ></path>' 
-                        var daArrowE  = '<path id=\"daArrow_E_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +' arrow iAni\" d=\"M 265 250 L258.93782217350895 253.5 L258.93782217350895 246.5 Z\" fill=\"#000\" ></path>'  
-                        var daArrowW  = '<path id=\"daArrow_W_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +' arrow iAni\" d=\"M 235 250 L241.06217782649108 246.5 L241.06217782649108 253.5 Z\" fill=\"#000\" ></path>'  
+                        var daArrowN  = '<path id=\"daArrow_N_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +' arrow Ani\" d=\"M 250 235 L253.5 241.06217782649108 L246.5 241.06217782649108 Z\" fill=\"#000\" ></path>'   // check the stroke width in the CSS since it changes with the size of the container div
+                        var daArrowS  = '<path id=\"daArrow_S_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +' arrow iAni\" d=\"M 250 265 L246.5 258.93782217350895 L253.5 258.93782217350895 Z\" fill=\"#000\" ></path>' 
+                        var daArrowE  = '<path id=\"daArrow_E_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +' arrow iAni\" d=\"M 265 250 L258.93782217350895 253.5 L258.93782217350895 246.5 Z\" fill=\"#000\" ></path>'  
+                        var daArrowW  = '<path id=\"daArrow_W_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +' arrow iAni\" d=\"M 235 250 L241.06217782649108 246.5 L241.06217782649108 253.5 Z\" fill=\"#000\" ></path>'  
                         
                         var svgStrokeTouch = '';
                         
                         if (this.svgType == "circle" ) {
-                            svgStrokeTouch = '<circle id=\"daRadio_' + daID + '\" class=\"' + daID +  ' ' + this.divContainer +' daRadio daR radio-touch-event\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r 
+                            svgStrokeTouch = '<circle id=\"daRadio_' + daID + '\" class=\"' + daID +  ' ' + this.divContainerName +' daRadio daR radio-touch-event\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r 
                                         + '\" style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0; cursor: pointer; stroke-width: 1%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
                                         + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></circle></g>' 
                         }
 
                         if (this.svgType == "vertical") {
-                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +'  iAni verticalLine\" x1=\"' + (this.divDimension.width * xProp)+ '\" y1=\"' + (this.divDimension.height * 0) + '\" x2=\"' + (this.divDimension.width * xProp) + '\" y2=\"' + (this.divDimension.height) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' 
+                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +'  iAni verticalLine\" x1=\"' + (this.divDimension.width * xProp)+ '\" y1=\"' + (this.divDimension.height * 0) + '\" x2=\"' + (this.divDimension.width * xProp) + '\" y2=\"' + (this.divDimension.height) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' 
                                         + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ew-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
                                         + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></line></g>' 
                         } 
 
                         if (this.svgType == "horizontal") {
-                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +'  iAni verticalLine\" x1=\"' + (this.divDimension.width * 0)+ '\" y1=\"' + (this.divDimension.height * yProp) + '\" x2=\"' + (this.divDimension.width) + '\" y2=\"' + (this.divDimension.height * yProp) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' 
+                            svgStrokeTouch = '<line id=\"daLine_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +'  iAni verticalLine\" x1=\"' + (this.divDimension.width * 0)+ '\" y1=\"' + (this.divDimension.height * yProp) + '\" x2=\"' + (this.divDimension.width) + '\" y2=\"' + (this.divDimension.height * yProp) + '\" xprop=\"' + xProp + '\"' + ' yprop=\"' + yProp + '\"' 
                                         + ' style=\"stroke: rgb(0, 0, 0); stroke-opacity: .0; cursor: ns-resize; stroke-width: 5%; animation: 0s ease 0s 1 normal none running none; pointer-events: stroke;' 
                                         + '\" onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"' 
                                         + '\"></line></g>' 
@@ -227,11 +243,11 @@ var TF = { //time filters to manage tiles of different years
                         if (this.svgButton == "EW" || (this.svgButton == '' && this.svgType == "vertical")) {var daArrowGroup =  daArrowE + daArrowW}
                         
 
-                        var svgButtons = '<g id=\"gUp' + daID + '\"class=\"upB\"><g  class=\"' + daID + ' ' + this.divContainer + ' daCenterSVG\"' +
+                        var svgButtons = '<g id=\"gUp' + daID + '\"class=\"upB\"><g  class=\"' + daID + ' ' + this.divContainerName + ' daCenterSVG\"' +
                         'stroke=\"none\" stroke-width=\"4\" ' 
                         + 'style=\"pointer-events: fill; position: absolute; cursor: move;\" ' 
                         + 'onmousedown=\"' + this.objName + '.onMouseDown(evt)\" onmousemove=\"' + this.objName + '.onMouseMove(evt)\" onmouseup=\"' + this.objName + '.daMouseUp(evt)\" ontouchstart=\"' + this.objName + '.onMouseDown(evt)\" ontouchmove=\"' + this.objName + '.onMouseMove(evt)\" ontouchend=\"' + this.objName + '.daMouseUp(evt)\" ontouchcancel=\"' + this.objName + '.daMouseUp(evt)\"'     
-                                       + '><circle id=\"_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +' iAni daArrowCircle\"' +
+                                       + '><circle id=\"_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +' iAni daArrowCircle\"' +
                                         'xprop=\"' + xProp + '\"' + 'yprop=\"' + yProp + '\"' +
                                         'cx= \"' + (this.divDimension.width * xProp) +
                                         '\" cy= \"' + (this.divDimension.height * yProp) +
@@ -265,7 +281,7 @@ var TF = { //time filters to manage tiles of different years
                             '\" r=\"' + this.divDimension.r + '\"></circle>' + 
                             svgTextMask +
                             '</clipPath>'  +
-                            '<circle id=\"daRadioStroke_' + daID + '\" class=\"' + daID + ' ' + this.divContainer +' daAnim daRadio daR radio-stroke\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r + '\" ' 
+                            '<circle id=\"daRadioStroke_' + daID + '\" class=\"' + daID + ' ' + this.divContainerName +' daAnim daRadio daR radio-stroke\" cx=\"' + (this.divDimension.width * xProp)+ '\" cy=\"' + (this.divDimension.height * yProp) + '\" r=\"' + this.divDimension.r + '\" ' 
                             +
                             'style=\"stroke: rgb(0, 0, 0); fill-opacity: 0; stroke-opacity: 0.5; cursor: pointer; stroke-width: 1%;'
                             + '\"></circle>' + svgText;
@@ -593,7 +609,7 @@ var TF = { //time filters to manage tiles of different years
                                         },
                  
                     addListerners: function(){
-                        // document.getElementById(this.divContainer).addEventListener("mouseup", this.daMouseUp);
+                        // document.getElementById(this.divContainerName).addEventListener("mouseup", this.daMouseUp);
                         var _this = this
                         window.addEventListener("mouseup", function(evt) {_this.daMouseUp(evt)});
                         window.addEventListener("mousemove", function(evt) {_this.onMouseMove(evt)});
@@ -770,8 +786,8 @@ var TF = { //time filters to manage tiles of different years
                                     //     var _this = this
                                     // window.addEventListener("mousemove", _this.onMouseMove);
                                     // window.addEventListener("click", _this.daMouseUp);                                 
-                                    // document.getElementById(this.divContainer).addEventListener("mousemove", this.onMouseMove);
-                                    // document.getElementById(this.divContainer).addEventListener("click", this.daMouseUp);
+                                    // document.getElementById(this.divContainerName).addEventListener("mousemove", this.onMouseMove);
+                                    // document.getElementById(this.divContainerName).addEventListener("click", this.daMouseUp);
                                 },
 
                             onMouseMove: function(evt) {
@@ -923,9 +939,9 @@ var TF = { //time filters to manage tiles of different years
                                                 var daText = this.daSVG.getElementsByClassName('text-above-circle')
                                                 for (i=0; i<daText.length;i++){
                                                         var xChange = 0
-                                                        // ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
+                                                        // ydis = daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainerName).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2                                        
                                                         var prevRadio = parseFloat(daText[i].getAttribute('radio')) 
-                                                        var yChange = prevRadio-rRadio // parseFloat(daText[i].getAttribute('y')) - daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainer).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2  - this.divDimension.fontSize/2 - rRadio                                   
+                                                        var yChange = prevRadio-rRadio // parseFloat(daText[i].getAttribute('y')) - daSVGbutton.getBoundingClientRect().y - document.getElementById(this.divContainerName).getBoundingClientRect().y + daSVGbutton.getBoundingClientRect().height/2  - this.divDimension.fontSize/2 - rRadio                                   
                                                         if (daText[i].getAttribute('transform') != null) {
                                                             var befTrans = daText[i].getAttribute('transform')
                                                             var befTransX = parseFloat(befTrans.split("(",)[1].split(" ")[0])
@@ -1010,7 +1026,7 @@ var TF = { //time filters to manage tiles of different years
                                         this.updatePosition()
                                         this.calculateDistance()
                                         this.contDiv.append(daMap)
-                                        // document.getElementById(this.divContainer).append(daMap)                                    
+                                        // document.getElementById(this.divContainerName).append(daMap)                                    
                                     } // End IF statmenet if moving the center of the circle
                                     
                                 },
@@ -1020,7 +1036,45 @@ var TF = { //time filters to manage tiles of different years
 
                                                     // }, // End of moveLoupe object                      
                 // }, //End of animSVG object
- resize: function(){
+            canvasPattern: function(daDivId, layers){
+                    this.divNames = [];
+                    this.filterNames = [];
+                    for (var l = 0; l < layers; l++) {
+                    var text = l+' '
+                    var daDivCont = document.getElementById(daDivId);
+                    var daDiv = document.createElement('div');
+                    var daIdName = "test"+l+"TF"+ this.counter
+                    daDiv.setAttributeNS(null, "id", daIdName)//this.counter)
+                    daDiv.setAttributeNS(null, 'class', this.classType);  
+                    this.divNames.push(daIdName)//this.counter)
+                    this.filterNames.push("TF "+l)
+                    // daDiv.setAttributeNS(null, "style", "width:inherit; height:inherit; background-color:inherit; position:absolute; z-index:"+l+";")   
+                    daDivCont.appendChild(daDiv)
+                    var canvas = document.createElement('canvas');
+                        canvas.id     = 'canv'+text;
+                        canvas.width  = daDivCont.getBoundingClientRect().width - 1;
+                        canvas.height = daDivCont.getBoundingClientRect().height - 1 ;
+                        // canvas.style.zIndex   = l;
+                        canvas.style.position = "absolute";
+                        canvas.style.border   = "1px solid";
+                        daDiv.appendChild(canvas);
+                    
+                    var ctx = canvas.getContext('2d');
+                    
+                    var fontSize = daDivCont.getBoundingClientRect().width / 10
+                
+                    ctx.font = fontSize +'px Arial';
+                    var txtW = ctx.measureText(text).width
+                    var txtH = fontSize//ctx.measureText(text).height
+                    
+                    var verticalRep = Math.round(daDivCont.getBoundingClientRect().width / txtW)
+                    var horizontalRep = Math.round(daDivCont.getBoundingClientRect().height / txtH)
+                        for (var i = 0; i < verticalRep; i++){
+                        for (var j = 0; j<horizontalRep+1; j++){
+                        ctx.fillText(text, txtW*i, txtH*j);
+                        }}}
+                    },
+resize: function(){
     this.calcDivDimensions()
     var xUpdate = (window.innerWidth - this.windowDimension.wX)/2;
     var yUpdate = (window.innerHeight - this.windowDimension.wY)/2;
