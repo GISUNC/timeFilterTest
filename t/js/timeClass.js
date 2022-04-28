@@ -1052,8 +1052,8 @@ var TF = { //time filters to manage tiles of different years
                     daDivCont.appendChild(daDiv)
                     var canvas = document.createElement('canvas');
                         canvas.id     = 'canv'+text;
-                        canvas.width  = daDivCont.getBoundingClientRect().width - 1;
-                        canvas.height = daDivCont.getBoundingClientRect().height - 1 ;
+                        canvas.width  = daDivCont.getBoundingClientRect().width;
+                        canvas.height = daDivCont.getBoundingClientRect().height;
                         // canvas.style.zIndex   = l;
                         canvas.style.position = "absolute";
                         // canvas.style.border   = "1px solid";
