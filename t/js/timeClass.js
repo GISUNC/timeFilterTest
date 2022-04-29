@@ -624,9 +624,11 @@ var TF = { //time filters to manage tiles of different years
                         window.addEventListener("touchend", function(evt) {_this.daMouseUp(evt)});
                         window.addEventListener("touchcancel", function(evt) {_this.daMouseUp(evt)});
 
-                        document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchmove',function(evt){_this.onMouseMove(evt)}))
-                        document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchend',function(evt){_this.daMouseUp(evt)}))
-                        document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchcancel',function(evt){_this.daMouseUp(evt)}))
+
+                        window.addEventListener("toustart", function(evt) {alert('touchstart')});
+                        // window.addEventListener("touchmove", function(evt) {alert('touchmove')});
+                        // window.addEventListener("touchend", function(evt) {alert('touchend')});
+                        window.addEventListener("touchcancel", function(evt) {alert('touchcancel')});
                     },
                     radioAnimationOn: function(classQuery) {
                         var daAnim = document.querySelectorAll(classQuery)
@@ -812,6 +814,10 @@ var TF = { //time filters to manage tiles of different years
                                 },
 
                             onMouseMove: function(evt) {
+
+                                var daBody = document.getElementsByTagName('body')
+                                var l = daBody.length; // this will stop the scrolling in cellphones
+                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}  
 
                                 // return}
                                     // If statements to turn off radio pointer
