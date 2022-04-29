@@ -625,10 +625,10 @@ var TF = { //time filters to manage tiles of different years
                         window.addEventListener("touchcancel", function(evt) {_this.daMouseUp(evt)});
 
 
-                        window.addEventListener("toustart", function(evt) {alert('touchstart')});
-                        // window.addEventListener("touchmove", function(evt) {alert('touchmove')});
+                        // window.addEventListener("toustart", function(evt) {alert('touchstart')});
+                        window.addEventListener("touchmove", function(evt) {alert('touchmove')});
                         // window.addEventListener("touchend", function(evt) {alert('touchend')});
-                        window.addEventListener("touchcancel", function(evt) {alert('touchcancel')});
+                        // window.addEventListener("touchcancel", function(evt) {alert('touchcancel')});
                     },
                     radioAnimationOn: function(classQuery) {
                         var daAnim = document.querySelectorAll(classQuery)
