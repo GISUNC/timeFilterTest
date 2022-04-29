@@ -92,7 +92,6 @@ var TF = { //time filters to manage tiles of different years
     text:true,
     textMask:false,
     namesInDiv : false,
-    windowScroll: {x:0,y:0},
     windowDimension: {wX:window.innerWidth, wY:window.innerHeight },
     divDimension: { width:"", height:"",xCenter:"",yCenter:"",r:"", fontSize:20, xProp:.5, yProp:.5},
     toRadians: function(angle) {return angle * (Math.PI / 180);},
@@ -674,11 +673,11 @@ var TF = { //time filters to manage tiles of different years
                         daSVG:undefined,      
                         onMouseDown: function(evt){
                                 elEvt = evt
-                                // var xScroll = window.scrollX
-                                // var yScroll = window.scrollY
-                                // this.windowScroll = {x:xScroll, y:yScroll}
-                                // window.onscroll = function () { window.scrollTo(xScroll, yScroll); };
-                                document.getElementsByTagName('body')[0].className = 'stop-scrolling'
+
+                                var daBody = document.getElementsByTagName('body')
+                                var l = daBody.length; // this will stop the scrolling in cellphones
+                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
+
                                 this.svgParent = evt.target.closest('.svgpapa')
                                 const contDiv = document.getElementById(evt.target.classList[1])
                                 if (contDiv != null){
@@ -911,7 +910,11 @@ var TF = { //time filters to manage tiles of different years
                                             this.yCirculo = parseInt(daC[i].getAttribute("cy"))
                                          }
                                     }  // End IF statement of radio 
-                                    document.getElementsByTagName('body')[0].className = ''                                },       
+                                    var daBody = document.getElementsByTagName('body')
+                                    var l = daBody.length;
+                                    for (var i=0; i < l; i++){daBody[i].className = ''}    
+                                    
+                                },       
                                 doUpdate: function (){  
                                     
                                     var daMap = this.ownerDiv
