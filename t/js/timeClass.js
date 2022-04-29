@@ -685,7 +685,6 @@ var TF = { //time filters to manage tiles of different years
                         daSVG:undefined,      
                         onMouseDown: function(evt){
                                 elEvt = evt
-                                this.disableScroll();
                                 // var daBody = document.getElementsByTagName('body')
                                 // var l = daBody.length; // this will stop the scrolling in cellphones
                                 // for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
@@ -693,6 +692,7 @@ var TF = { //time filters to manage tiles of different years
                                 // var l = daBody.length; // this will stop the scrolling in cellphones
                                 // for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}  
                                 if (evt.target.closest('.svgpapa') == null){return}
+                                this.disableScroll();
                                 this.svgParent = evt.target.closest('.svgpapa')
                                 const contDiv = document.getElementById(evt.target.classList[1])
                                 if (contDiv != null){
