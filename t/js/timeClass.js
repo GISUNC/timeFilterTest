@@ -1121,7 +1121,7 @@ var TF = { //time filters to manage tiles of different years
 ////////////control cellphone problems 
 /// solution obtained
 ///https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily/12090055#12090055
-keys: {37: 1, 38: 1, 39: 1, 40: 1, 187:1, 107:1,61:1,171:1,189:1,109:1,54:1,173:1,}, // added additional key entries based on leaflet
+keys: {37: 1, 38: 1, 39: 1, 40: 1},// 187:1, 107:1,61:1,171:1,189:1,109:1,54:1,173:1,}, // added additional key entries based on leaflet
 preventDefault: function(e) {
   e.preventDefault();
 },
