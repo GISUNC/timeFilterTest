@@ -139,8 +139,8 @@ to {
 
 .stop-scrolling {
   /* height: 100%; */
-  overflow: hidden;
+  /* overflow: hidden;
   user-select: none;
   overscroll-behavior: contain;
-  touch-action: none;
+  touch-action: none; */
 }
