@@ -136,3 +136,7 @@ to {
   font-size: 20px;
 }
 
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden;
+}

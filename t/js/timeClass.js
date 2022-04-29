@@ -92,6 +92,7 @@ var TF = { //time filters to manage tiles of different years
     text:true,
     textMask:false,
     namesInDiv : false,
+    windowScroll: {x:0,y:0},
     windowDimension: {wX:window.innerWidth, wY:window.innerHeight },
     divDimension: { width:"", height:"",xCenter:"",yCenter:"",r:"", fontSize:20, xProp:.5, yProp:.5},
     toRadians: function(angle) {return angle * (Math.PI / 180);},
@@ -673,6 +674,11 @@ var TF = { //time filters to manage tiles of different years
                         daSVG:undefined,      
                         onMouseDown: function(evt){
                                 elEvt = evt
+                                var xScroll = window.scrollX
+                                var yScroll = window.scrollY
+                                this.windowScroll = {x:xScroll, y:yScroll}
+                                window.onscroll = function () { window.scrollTo(xScroll, yScroll); };
+                                
                                 this.svgParent = evt.target.closest('.svgpapa')
                                 const contDiv = document.getElementById(evt.target.classList[1])
                                 if (contDiv != null){
@@ -904,7 +910,8 @@ var TF = { //time filters to manage tiles of different years
                                             this.xCirculo = parseInt(daC[i].getAttribute("cx"))
                                             this.yCirculo = parseInt(daC[i].getAttribute("cy"))
                                          }
-                                    }  // End IF statement of radio     
+                                    }  // End IF statement of radio 
+                                    window.onscroll = null    
                                 },       
                                 doUpdate: function (){  
                                     
