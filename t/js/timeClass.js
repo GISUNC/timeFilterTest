@@ -21,7 +21,7 @@ var TF = { //time filters to manage tiles of different years
         if (svgType == null) {this.svgType = "circle" } else {this.svgType = svgType};
         this.makeSVG()
         this.addListerners()
-        // this.listenResize()  
+        this.listenResize()  
         this.arrayObj.push(this.returnObj())
         this.counter =  this.counter + 1
 
@@ -36,7 +36,7 @@ var TF = { //time filters to manage tiles of different years
         this.calcDivDimensions();
         this.makeSVG()
         this.addListerners()
-        // this.listenResize()  
+        this.listenResize()  
         this.arrayObj.push(this.returnObj())
         this.counter =  this.counter + 1
         
@@ -618,6 +618,15 @@ var TF = { //time filters to manage tiles of different years
                         window.addEventListener("mouseup", function(evt) {_this.daMouseUp(evt)});
                         window.addEventListener("mousemove", function(evt) {_this.onMouseMove(evt)});
                         window.addEventListener("click", function(evt) {_this.daMouseUp(evt)}); 
+                        
+                        window.addEventListener("toustart", function(evt) {_this.onMouseDown(evt)});
+                        window.addEventListener("touchmove", function(evt) {_this.onMouseMove(evt)});
+                        window.addEventListener("touchend", function(evt) {_this.daMouseUp(evt)});
+                        window.addEventListener("touchcancel", function(evt) {_this.daMouseUp(evt)});
+
+                        document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchmove',function(evt){_this.onMouseMove(evt)}))
+                        document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchend',function(evt){_this.daMouseUp(evt)}))
+                        document.querySelectorAll('.daCenterSVG').forEach(e=>e.addEventListener('ontouchcancel',function(evt){_this.daMouseUp(evt)}))
                     },
                     radioAnimationOn: function(classQuery) {
                         var daAnim = document.querySelectorAll(classQuery)
