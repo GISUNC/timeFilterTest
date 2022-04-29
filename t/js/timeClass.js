@@ -21,7 +21,7 @@ var TF = { //time filters to manage tiles of different years
         if (svgType == null) {this.svgType = "circle" } else {this.svgType = svgType};
         this.makeSVG()
         this.addListerners()
-        this.listenResize()  
+        // this.listenResize()  
         this.arrayObj.push(this.returnObj())
         this.counter =  this.counter + 1
 
