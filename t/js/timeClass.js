@@ -674,11 +674,11 @@ var TF = { //time filters to manage tiles of different years
                         daSVG:undefined,      
                         onMouseDown: function(evt){
                                 elEvt = evt
-                                var xScroll = window.scrollX
-                                var yScroll = window.scrollY
-                                this.windowScroll = {x:xScroll, y:yScroll}
-                                window.onscroll = function () { window.scrollTo(xScroll, yScroll); };
-                                
+                                // var xScroll = window.scrollX
+                                // var yScroll = window.scrollY
+                                // this.windowScroll = {x:xScroll, y:yScroll}
+                                // window.onscroll = function () { window.scrollTo(xScroll, yScroll); };
+                                document.getElementsByTagName('body')[0].className = 'stop-scrolling'
                                 this.svgParent = evt.target.closest('.svgpapa')
                                 const contDiv = document.getElementById(evt.target.classList[1])
                                 if (contDiv != null){
@@ -911,8 +911,7 @@ var TF = { //time filters to manage tiles of different years
                                             this.yCirculo = parseInt(daC[i].getAttribute("cy"))
                                          }
                                     }  // End IF statement of radio 
-                                    window.onscroll = null    
-                                },       
+                                    document.getElementsByTagName('body')[0].className = ''                                },       
                                 doUpdate: function (){  
                                     
                                     var daMap = this.ownerDiv
