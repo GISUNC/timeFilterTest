@@ -140,4 +140,5 @@ to {
 .stop-scrolling {
   /* height: 100%; */
   overflow: hidden;
+  user-select: none;
 }
