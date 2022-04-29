@@ -623,6 +623,7 @@ var TF = { //time filters to manage tiles of different years
                         window.addEventListener("touchmove", function(evt) {_this.onMouseMove(evt)});
                         window.addEventListener("touchend", function(evt) {_this.daMouseUp(evt)});
                         window.addEventListener("touchcancel", function(evt) {_this.daMouseUp(evt)});
+                        window.addEventListener("resize", function() {alert('resize')})
 
 
                         // window.addEventListener("toustart", function(evt) {alert('touchstart')});
