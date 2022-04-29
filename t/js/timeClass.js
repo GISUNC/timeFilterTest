@@ -42,6 +42,7 @@ var TF = { //time filters to manage tiles of different years
         
     },
     arrayObj: [],
+    iObj:undefined,
     returnObj: function(){
         let _ = this;
         const tF = {
@@ -613,23 +614,22 @@ var TF = { //time filters to manage tiles of different years
                                         },
                  
                     addListerners: function(){
+                        ///
+
+                        
                         // document.getElementById(this.divContainerName).addEventListener("mouseup", this.daMouseUp);
                         var _this = this
                         window.addEventListener("mouseup", function(evt) {_this.daMouseUp(evt)});
                         window.addEventListener("mousemove", function(evt) {_this.onMouseMove(evt)});
                         window.addEventListener("click", function(evt) {_this.daMouseUp(evt)}); 
                         
-                        window.addEventListener("toustart", function(evt) {_this.onMouseDown(evt)});
+                        window.addEventListener("touchstart", function(evt) {_this.onMouseDown(evt)});
                         window.addEventListener("touchmove", function(evt) {_this.onMouseMove(evt)});
                         window.addEventListener("touchend", function(evt) {_this.daMouseUp(evt)});
                         window.addEventListener("touchcancel", function(evt) {_this.daMouseUp(evt)});
-                        window.addEventListener("resize", function() {alert('resize')})
 
+                        
 
-                        // window.addEventListener("toustart", function(evt) {alert('touchstart')});
-                        // window.addEventListener("touchmove", function(evt) {alert('touchmove')});
-                        // window.addEventListener("touchend", function(evt) {alert('touchend')});
-                        // window.addEventListener("touchcancel", function(evt) {alert('touchcancel')});
                     },
                     radioAnimationOn: function(classQuery) {
                         var daAnim = document.querySelectorAll(classQuery)
@@ -685,14 +685,14 @@ var TF = { //time filters to manage tiles of different years
                         daSVG:undefined,      
                         onMouseDown: function(evt){
                                 elEvt = evt
-
+                                this.disableScroll();
                                 var daBody = document.getElementsByTagName('body')
                                 var l = daBody.length; // this will stop the scrolling in cellphones
                                 for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
                                 var daBody = document.getElementsByTagName('html')
                                 var l = daBody.length; // this will stop the scrolling in cellphones
                                 for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}  
-
+                                if (evt.target.closest('.svgpapa') == null){return}
                                 this.svgParent = evt.target.closest('.svgpapa')
                                 const contDiv = document.getElementById(evt.target.classList[1])
                                 if (contDiv != null){
@@ -701,14 +701,16 @@ var TF = { //time filters to manage tiles of different years
                                     this.svgParent = evt.target.closest('.svgpapa')
                                     this.calcDivDimensions()
                                 }
-                                iObj = this.arrayObj[parseInt(this.svgParent.getAttribute('counter'))]
-                                this.mergeSVG = iObj.mergeSVG;
-                                this.svgType = iObj.svgType;
+                                this.iObj = this.arrayObj[parseInt(this.svgParent.getAttribute('counter'))]
+                                if(this.iObj == undefined){return}
+                                this.mergeSVG = this.iObj.mergeSVG;
+                                this.svgType = this.iObj.svgType;
+                                this.leaflet = this.iObj.leaflet;
                                 // Loop to dissable the Leaflet dragging // change to an arrow forEach function 
                                 // MAKE EVT have attribute leaflet 
-                                if(iObj.leaflet == true){
-                                for (var i=0; i<iObj.leafList.length; i++) {
-                                    iObj.leafList[i].dragging.disable()
+                                if(this.iObj.leaflet == true){
+                                for (var i=0; i<this.iObj.leafList.length; i++) {
+                                    this.iObj.leafList[i].dragging.disable()
                                     }}
                                     // maybe do an if statemet to make it not ittarate eavery time, 
                                     document.querySelectorAll(".daAnim, .arrow").forEach(e=>e.style.animation = "none")
@@ -728,7 +730,7 @@ var TF = { //time filters to manage tiles of different years
                                     }
                                     this.ownerSVG = this.daSVG;
                                     
-                                    if (iObj.leaflet == true){this.ownerDiv = this.ownerSVG.parentElement.parentElement;}
+                                    if (this.iObj.leaflet == true){this.ownerDiv = this.ownerSVG.parentElement.parentElement;}
                                     else {this.ownerDiv = this.ownerSVG.parentElement}
                                     
                                     this.offset = this.ownerDiv.getBoundingClientRect()
@@ -817,13 +819,14 @@ var TF = { //time filters to manage tiles of different years
                                 },
 
                             onMouseMove: function(evt) {
-
-                                var daBody = document.getElementsByTagName('body')
-                                var l = daBody.length; // this will stop the scrolling in cellphones
-                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
-                                var daBody = document.getElementsByTagName('html')
-                                var l = daBody.length; // this will stop the scrolling in cellphones
-                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'} 
+                                if(this.iObj == undefined){return}
+                                this.disableScroll();
+                                // var daBody = document.getElementsByTagName('body')
+                                // var l = daBody.length; // this will stop the scrolling in cellphones
+                                // for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
+                                // var daBody = document.getElementsByTagName('html')
+                                // var l = daBody.length; // this will stop the scrolling in cellphones
+                                // for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'} 
                                 // return}
                                     // If statements to turn off radio pointer
 
@@ -868,8 +871,7 @@ var TF = { //time filters to manage tiles of different years
                                 },
                                 
                             daMouseUp: function() {
-                                    
-
+                                    if(this.iObj == undefined){return}
                                     if (this.circleRotator == true)
                                     {  this.bmousedown=0;
                                     this.circleRotator = false;
@@ -879,9 +881,10 @@ var TF = { //time filters to manage tiles of different years
                                             for (i=0;i < daRadio.length; i++){
                                                 daRadio[i].style.pointerEvents  = "stroke";
                                             } 
-                                    if(iObj.leaflet == true){
-                                    for (var i=0; i<iObj.leafList.length; i++) {
-                                        iObj.leafList[i].dragging.enable()
+                                    
+                                    if(this.iObj.leaflet == true){
+                                    for (var i=0; i<this.iObj.leafList.length; i++) {
+                                        this.iObj.leafList[i].dragging.enable()
                                     }
                                     }}
                                     //If statements to activate the radio animation
@@ -890,15 +893,15 @@ var TF = { //time filters to manage tiles of different years
                                         {this.daSVG.getAttribute("pies").split('.').forEach(e=>this.radioAnimationOn('.'+e+'.daR.daAnim'))}
                                         else{this.radioAnimationOn('.'+this.currentID+'.daR.daAnim');}                                           
                                         //Enable leaflet dragging 
-                                        if(iObj.leaflet == true){
-                                        for (var i=0; i<iObj.leafList.length; i++) {
-                                            iObj.leafList[i].dragging.enable()
+                                        if(this.iObj.leaflet == true){
+                                        for (var i=0; i<this.iObj.leafList.length; i++) {
+                                            this.iObj.leafList[i].dragging.enable()
                                         } 
                                     }}
                                     //Enable leaflet dragging
-                                    if(iObj.leaflet == true){
-                                    for (i=0; i<iObj.leafList.length; i++) {
-                                        iObj.leafList[i].dragging.enable()
+                                    if(this.iObj.leaflet == true){
+                                    for (i=0; i<this.iObj.leafList.length; i++) {
+                                        this.iObj.leafList[i].dragging.enable()
                                     }}
                                     // Start IF statment if working moving the center of the circle
                                     if (this.circleMove == true) {
@@ -931,13 +934,15 @@ var TF = { //time filters to manage tiles of different years
                                             this.yCirculo = parseInt(daC[i].getAttribute("cy"))
                                          }
                                     }  // End IF statement of radio 
-                                    var daBody = document.getElementsByTagName('body')
-                                    var l = daBody.length;
-                                    for (var i=0; i < l; i++){daBody[i].className = ''}       
-                                    var daBody = document.getElementsByTagName('html')
-                                    var l = daBody.length; // this will stop the scrolling in cellphones
-                                    for (var i=0; i < l; i++){daBody[i].className = ''} 
-                                    
+                                    // var daBody = document.getElementsByTagName('body')
+                                    // var l = daBody.length;
+                                    // for (var i=0; i < l; i++){daBody[i].className = ''}       
+                                    // var daBody = document.getElementsByTagName('html')
+                                    // var l = daBody.length; // this will stop the scrolling in cellphones
+                                    // for (var i=0; i < l; i++){daBody[i].className = ''} 
+                                    this.enableScroll();
+                                    this.iObj = undefined;
+
                                 },       
                                 doUpdate: function (){  
                                     
@@ -1113,6 +1118,60 @@ var TF = { //time filters to manage tiles of different years
                         ctx.fillText(text, txtW*i, txtH*j);
                         }}}
                     },
+////////////control cellphone problems 
+/// solution obtained
+///https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily/12090055#12090055
+keys: {37: 1, 38: 1, 39: 1, 40: 1, 187:1, 107:1,61:1,171:1,189:1,109:1,54:1,173:1,}, // added additional key entries based on leaflet
+preventDefault: function(e) {
+  e.preventDefault();
+},
+
+preventDefaultForScrollKeys: function(e) {
+  if (this.keys[e.keyCode]) {
+    preventDefault(e);
+    return false;
+  }
+},
+
+// modern Chrome requires { passive: false } when adding event
+supportsPassive: false,
+supportsPassiveTry: function() {
+    const _this = this
+    try {
+      window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+        get: function () {_this.supportsPassive = true; } 
+      }));
+    } catch(e) {}},
+// wheelOpt: this.supportsPassive ? { passive: false } : false,
+wheelOpt: undefined,
+checkWheelOpt:function(){const _this = this; if (this.supportsPassive == true){this.wheelOpt = { passive: false }} else {this.wheelOpt = false}},
+
+wheelEvent: 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel',
+
+// call this to Disable
+disableScroll: function() {
+  const _this = this
+  _this.supportsPassiveTry();
+  _this.checkWheelOpt();
+
+  window.addEventListener('DOMMouseScroll', _this.preventDefault, false); // older FF
+  window.addEventListener(_this.wheelEvent, _this.preventDefault, _this.wheelOpt); // modern desktop
+  window.addEventListener('touchmove', _this.preventDefault, _this.wheelOpt); // mobile
+  window.addEventListener('keydown', _this.preventDefaultForScrollKeys, false);
+},
+
+// call this to Enable
+enableScroll: function() {
+  const _this = this
+  _this.supportsPassiveTry();
+  _this.checkWheelOpt();
+  window.removeEventListener('DOMMouseScroll', _this.preventDefault, false);
+  window.removeEventListener(_this.wheelEvent, _this.preventDefault, _this.wheelOpt); 
+  window.removeEventListener('touchmove', _this.preventDefault, _this.wheelOpt);
+  window.removeEventListener('keydown',_this.preventDefaultForScrollKeys, false);
+},
+
+
 resize: function(){
     this.calcDivDimensions()
     var xUpdate = (window.innerWidth - this.windowDimension.wX)/2;
