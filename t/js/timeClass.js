@@ -1197,3 +1197,4 @@ resize: function(){
     window.addEventListener("orientationchange", function() {_this.resize()})
 }
 } // end of Time Filter Object 
+TF.enableScroll()
