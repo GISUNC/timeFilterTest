@@ -807,6 +807,9 @@ var TF = { //time filters to manage tiles of different years
                                     // If statements to turn off radio pointer
 
                                 //MAKE rotator attribute
+                                var daBody = document.getElementsByTagName('body')
+                                var l = daBody.length; // this will stop the scrolling in cellphones
+                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}  
 
                                     if((this.bmousedown == 1 || this.bmousedown == 3) && (this.circleMove == true || this.circleRotator == true)){
                                         var daRadio = document.querySelectorAll('.'+this.currentID+'.daR')
