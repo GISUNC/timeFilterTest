@@ -626,7 +626,7 @@ var TF = { //time filters to manage tiles of different years
 
 
                         // window.addEventListener("toustart", function(evt) {alert('touchstart')});
-                        window.addEventListener("touchmove", function(evt) {alert('touchmove')});
+                        // window.addEventListener("touchmove", function(evt) {alert('touchmove')});
                         // window.addEventListener("touchend", function(evt) {alert('touchend')});
                         // window.addEventListener("touchcancel", function(evt) {alert('touchcancel')});
                     },
@@ -688,7 +688,9 @@ var TF = { //time filters to manage tiles of different years
                                 var daBody = document.getElementsByTagName('body')
                                 var l = daBody.length; // this will stop the scrolling in cellphones
                                 for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
-                            
+                                var daBody = document.getElementsByTagName('html')
+                                var l = daBody.length; // this will stop the scrolling in cellphones
+                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}  
 
                                 this.svgParent = evt.target.closest('.svgpapa')
                                 const contDiv = document.getElementById(evt.target.classList[1])
@@ -817,8 +819,10 @@ var TF = { //time filters to manage tiles of different years
 
                                 var daBody = document.getElementsByTagName('body')
                                 var l = daBody.length; // this will stop the scrolling in cellphones
-                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}  
-
+                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
+                                var daBody = document.getElementsByTagName('html')
+                                var l = daBody.length; // this will stop the scrolling in cellphones
+                                for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'} 
                                 // return}
                                     // If statements to turn off radio pointer
 
@@ -928,7 +932,10 @@ var TF = { //time filters to manage tiles of different years
                                     }  // End IF statement of radio 
                                     var daBody = document.getElementsByTagName('body')
                                     var l = daBody.length;
-                                    for (var i=0; i < l; i++){daBody[i].className = ''}    
+                                    for (var i=0; i < l; i++){daBody[i].className = ''}       
+                                    var daBody = document.getElementsByTagName('html')
+                                    var l = daBody.length; // this will stop the scrolling in cellphones
+                                    for (var i=0; i < l; i++){daBody[i].className = ''} 
                                     
                                 },       
                                 doUpdate: function (){  
