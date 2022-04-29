@@ -12,6 +12,7 @@ body{
      -moz-user-select: none; 
       -ms-user-select: none; 
           user-select: none;
+          overflow: hidden;
   }
 
 
@@ -29,6 +30,8 @@ body{
   border-collapse: collapse;
   width: inherit;
   height:inherit;
+  overflow: auto;
+  
 }
 
 .timeFimg{
