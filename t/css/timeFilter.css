@@ -144,3 +144,11 @@ to {
   overscroll-behavior: contain;
   touch-action: none; */
 }
+
+svg{
+  /* width: 100%;
+  height: 100%; */
+  /* border: 1px solid green; */
+  display:block;
+  box-sizing: border-box;
+}

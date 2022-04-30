@@ -9,6 +9,8 @@ var elEvt = undefined
 var TF = { //time filters to manage tiles of different years
     start: function(containerDIV,tileArray,svgType, options) {
         this.divNames = []; //  I changed this method 
+        this.parentSvgArray = [];
+        this.upperSvgArray = [];
         this.divContainerName = containerDIV;
         this.leafMaps = [];
         this.leafTiles = tileArray;
@@ -24,10 +26,13 @@ var TF = { //time filters to manage tiles of different years
         // this.listenResize()  
         this.arrayObj.push(this.returnObj())
         this.counter =  this.counter + 1
+        this.resize()
 
     },
     test:function(containerDivID, layers, svgType){
         this.divNames = [];
+        this.parentSvgArray = [];
+        this.upperSvgArray = [];
         this.divContainerName = containerDivID;
         this.contDiv = document.getElementById(containerDivID)
                                 if (this.contDiv == null) {return console.log("no div whith that ID")} 
@@ -39,7 +44,7 @@ var TF = { //time filters to manage tiles of different years
         // this.listenResize()  
         this.arrayObj.push(this.returnObj())
         this.counter =  this.counter + 1
-        
+        this.resize()
     },
     arrayObj: [],
     iObj:undefined,
@@ -64,7 +69,9 @@ var TF = { //time filters to manage tiles of different years
             mergeSVG: _.mergeSVG,
             textMask:_.textMask,
             namesInDiv:_.namesInDiv,
-            windowDimension:_.windowDimension
+            windowDimension:_.windowDimension,
+            parentSvgArray:_.parentSvgArray,
+            upperSvgArray:_.upperSvgArray,
         };
         // there has to be a better way // but if I copy an entire object it has a pointer that 
         tF.windowDimension = Object.assign({},_.windowDimension)
@@ -75,6 +82,8 @@ var TF = { //time filters to manage tiles of different years
     divContainerName: "daMap",
     svgParentName: undefined,
     svgParent:undefined,
+    parentSvgArray:[],
+    upperSvgArray:[],
     counter:0,
     update: true,
     pieArray: [],
@@ -162,6 +171,8 @@ var TF = { //time filters to manage tiles of different years
                             if(this.divDimension.height == 0)  {this.divDimension.height = Math.floor(window.innerHeight)}
                             this.divDimension.xCenter = this.divDimension.width/2;
                             this.divDimension.yCenter = this.divDimension.height/2;
+                            this.windowDimension.wX = window.innerWidth;
+                            this.windowDimension.wY = window.innerHeight;
                             // setting a default radio size based on the div dimension// maybe this line should be place somewhere else
                             if (this.divDimension.xCenter >= this.divDimension.yCenter && this.divDimension.r == "") {this.divDimension.r = this.divDimension.yCenter/3} else {this.divDimension.r = this.divDimension.xCenter/3}
                             
@@ -321,6 +332,7 @@ var TF = { //time filters to manage tiles of different years
                             document.getElementById(this.divNames[i]).style.webkitClipPath  = 'url(#mask_' + daID + ')';
                             document.getElementById(this.divNames[i]).style.zIndex = "999";
                         }
+                        this.upperSvgArray.push(svgElem)
                         this.contDiv.append(document.getElementById(this.divNames[i]))// version i works with Firefox and Chrome however safari has the zindex issue. I am going to first try to put all svg in the same div then on the same
                         // I made this version for the safari issues
                         daInnerHTML = daInnerHTML + svgButtons
@@ -335,6 +347,7 @@ var TF = { //time filters to manage tiles of different years
                                 svgParentElem.setAttributeNS(null, "class", "svgpapa")
                                 document.getElementById(this.divNames[0]).appendChild(svgParentElem)
                             }
+                            this.parentSvgArray.push(svgParentElem)
                             this.updatePosition()
                         },
     listenSVG:function(){   // THIS method does not work
@@ -362,6 +375,7 @@ var TF = { //time filters to manage tiles of different years
                 // hopefully this will fix the problem that the masks get separeted from the SVGs when we change the size of the windows     
                 // to do calculate the change in dimensions and apply it to the map. This will be applied to all elements that have a cordinate x and y. 
                 // some ideas to think, let the circles free flow or move with the accelerometer. 
+                // this.calcDivDimensions()
                 var divWidth = this.divDimension.width
                 var divHeight = this.divDimension.height
                 function xyUpdater(e) {
@@ -821,6 +835,7 @@ var TF = { //time filters to manage tiles of different years
                             onMouseMove: function(evt) {
                                 if(this.iObj == undefined){return}
                                 this.disableScroll();
+                                
                                 // var daBody = document.getElementsByTagName('body')
                                 // var l = daBody.length; // this will stop the scrolling in cellphones
                                 // for (var i=0; i < l; i++){daBody[i].className = 'stop-scrolling'}   
@@ -872,6 +887,7 @@ var TF = { //time filters to manage tiles of different years
                                 
                             daMouseUp: function() {
                                     if(this.iObj == undefined){return}
+                                    
                                     if (this.circleRotator == true)
                                     {  this.bmousedown=0;
                                     this.circleRotator = false;
@@ -1069,6 +1085,7 @@ var TF = { //time filters to manage tiles of different years
                                         this.updatePosition()
                                         this.calculateDistance()
                                         this.contDiv.append(daMap)
+                                        this.resize();
                                         // document.getElementById(this.divContainerName).append(daMap)                                    
                                     } // End IF statmenet if moving the center of the circle
                                     
@@ -1173,21 +1190,52 @@ enableScroll: function() {
 
 
 resize: function(){
-    this.calcDivDimensions()
+    // this.calcDivDimensions()
     var xUpdate = (window.innerWidth - this.windowDimension.wX)/2;
     var yUpdate = (window.innerHeight - this.windowDimension.wY)/2;
-    this.updateMasks(xUpdate,yUpdate)
+
+    
     this.windowDimension.wY = window.innerHeight
     this.windowDimension.wX = window.innerWidth
-    var vBoriginalX = document.getElementById(this.svgParentName).viewBox.baseVal.x
-    var vBoriginalY = document.getElementById(this.svgParentName).viewBox.baseVal.y
-    document.getElementById(this.svgParentName).setAttributeNS(null,'viewBox',vBoriginalX + " " + vBoriginalY + " "+window.innerWidth+" "+window.innerHeight)
     
-    document.querySelectorAll(".upperSVG").forEach(e=>e.setAttributeNS(null,'viewBox',
-          e.viewBox.baseVal.x
-          +" "
-          +e.viewBox.baseVal.y
-          +" "+window.innerWidth+" "+window.innerHeight))
+    // get it by svgpapa
+    // document.querySelectorAll(".svgpapa").forEach(e=>{
+        // var vBoriginalX = e.viewBox.baseVal.x
+        // var vBoriginalY = e.viewBox.baseVal.y
+    //     var xUpdate = (window.innerWidth - e.viewBox.baseVal.width)/2
+    //     var yUpdate = (window.innerHeight - e.viewBox.baseVal.height)/2
+    //     // TF.updateMasks(xUpdate,yUpdate)
+    //     // e.setAttributeNS(null,'viewBox',e.viewBox.baseVal.x + " " + e.viewBox.baseVal.y + " "+window.innerWidth+" "+window.innerHeight)
+    // })
+        
+    // document.getElementById(this.svgParentName).setAttributeNS(null,'viewBox',vBoriginalX + " " + vBoriginalY + " "+window.innerWidth+" "+window.innerHeight)
+    // document.getElementById(this.svgParentName).setAttributeNS(null,'viewBox',vBoriginalX + " " + vBoriginalY + " "+this.divDimension.width+" "+this.divDimension.height)
+    var divWidth = undefined;
+    var divHeight = undefined;
+
+    // document.querySelectorAll(".upperSVG").forEach(e=>
+    //     {   
+    //         divWidth = e.closest('.timeFdiv').getBoundingClientRect().width;
+    //         divHeight = e.closest('.timeFdiv').getBoundingClientRect().height
+    //     e.setAttributeNS(null,'viewBox',
+    //      e.viewBox.baseVal.x
+    //       +" "
+    //       +e.viewBox.baseVal.y
+    //       +" "+divWidth+" "+divHeight)
+    //     })
+    //     document.querySelectorAll(".svgpapa").forEach(e=>{e.setAttributeNS(null,'viewBox',e.viewBox.baseVal.x + " " + e.viewBox.baseVal.y + " "+divWidth+" "+divHeight)
+    //     })
+
+    this.arrayObj.forEach(e=>{
+        var divElem = document.getElementById(e.divNames[0])
+        divWidth = divElem.getBoundingClientRect().width
+        divHeight = divElem.getBoundingClientRect().height
+        e.upperSvgArray.forEach(elem => elem.setAttributeNS(null,'viewBox',elem.viewBox.baseVal.x +" "+elem.viewBox.baseVal.y +" "+divWidth+" "+divHeight))
+        e.parentSvgArray.forEach(elem => elem.setAttributeNS(null,'viewBox',elem.viewBox.baseVal.x +" "+elem.viewBox.baseVal.y +" "+divWidth+" "+divHeight))
+    })
+        this.updateMasks(xUpdate,yUpdate)
+        this.calcDivDimensions()
+    
   if(this.pieArray.length > 0){
     this.pieArray.forEach(e=>this.makePies(e.divArray,e.iRad))}// 
   },
